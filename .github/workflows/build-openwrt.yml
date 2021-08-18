@@ -19,7 +19,9 @@ on:
         required: false
         default: 'false'
 
+### 环境变量设置
 env:
+# 源码仓库:分支
   REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
   FEEDS_CONF: feeds.conf.default
@@ -32,6 +34,10 @@ env:
   UPLOAD_WETRANSFER: false
   UPLOAD_RELEASE: false
   TZ: Asia/Shanghai
+# 删除无用文件以释放更多空间
+  DELETE_USELESS_FILES: true
+# 删除早期的 workflow 任务
+  DELETE_OLD_WORKFLOW: true
 
 jobs:
   build:
