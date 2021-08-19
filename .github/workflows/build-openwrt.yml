@@ -34,10 +34,6 @@ env:
   UPLOAD_WETRANSFER: false
   UPLOAD_RELEASE: false
   TZ: Asia/Shanghai
-# 删除无用文件以释放更多空间
-  DELETE_USELESS_FILES: true
-# 删除早期的 workflow 任务
-  DELETE_OLD_WORKFLOW: true
 
 jobs:
   build:
