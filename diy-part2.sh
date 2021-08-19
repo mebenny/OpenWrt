@@ -13,9 +13,3 @@
 # Modify default IP
 sed -i 's/192.168.1.1/192.168.10.15/g' package/base-files/files/bin/config_generate
 
-# 修改密码为空，自定义名称
-ZZZ=package/lean/default-settings/files/zzz-default-settings
-sed -i /CYXluq4wUazHjmCDBCqXF/d $ZZZ
-
-#为自定义内容
-sed -i s/OpenWrt /meBenny compiled in $(TZ=UTC-8 date +%Y.%m.%d) @ OpenWrt /g $ZZZ
