@@ -16,8 +16,7 @@ sed -i 's/192.168.1.1/192.168.10.15/g' package/base-files/files/bin/config_gener
 # 修改默认主题为argon
 sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' feeds/luci/collections/luci/Makefile
 
-# 修改密码为空，自定义名称
-ZZZ='package/lean/default-settings/files/zzz-default-settings'
-sed -i '/CYXluq4wUazHjmCDBCqXF/d' $ZZZ
+# 修改密码为空
+sed -i 's/$1$V4UetPzk$CYXluq4wUazHjmCDBCqXF.//g' openwrt/package/lean/default-settings/files/zzz-default-settings
 # 为自定义内容
-sed -i 's/OpenWrt /meBenny compiled in $(TZ=UTC-8 date +%Y.%m.%d) @ OpenWrt /g' $ZZZ
+
