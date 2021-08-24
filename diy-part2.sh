@@ -23,7 +23,7 @@ ZZZ="package/lean/default-settings/files/zzz-default-settings"
 sed -i '/CYXluq4wUazHjmCDBCqXF/d $ZZZ'
 
 # 修改机器名称
-# sed -i "s/meBenny/$device_name/g" package/base-files/files/bin/config_generate
+sed -i "s/meBenny/$device_name/g" package/base-files/files/bin/config_generate
 
 # 修改时区
-# sed -i "s/'UTC'/'CST-8'\n   set system.@system[-1].zonename='$utc_name'/g" package/base-files/files/bin/config_generate
+sed -i "s/'UTC'/'CST-8'\n   set system.@system[-1].zonename='$utc_name'/g" package/base-files/files/bin/config_generate
