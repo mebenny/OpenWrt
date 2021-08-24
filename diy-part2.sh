@@ -20,7 +20,7 @@ sed -i 's/192.168.1.1/192.168.10.15/g' package/base-files/files/bin/config_gener
 # sed -i 's/$1$V4UetPzk$CYXluq4wUazHjmCDBCqXF.//g' openwrt/package/lean/default-settings/files/zzz-default-settings
 # sed -i 's/root::0:0:99999:7:::/root:$1$V4UetPzk$CYXluq4wUazHjmCDBCqXF.:0:0:99999:7:::/g' /etc/shadow
 ZZZ="package/lean/default-settings/files/zzz-default-settings"
-sed -i '/CYXluq4wUazHjmCDBCqXF/d $ZZZ'
+sed -i '/CYXluq4wUazHjmCDBCqXF/d' $ZZZ
 
 # 自定义内容
 sed -i 's/OpenWrt /meBenny compiled in $(TZ=UTC-8 date +%Y.%m.%d) @ OpenWrt /g' $ZZZ
