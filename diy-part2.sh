@@ -23,7 +23,7 @@ ZZZ="package/lean/default-settings/files/zzz-default-settings"
 sed -i '/CYXluq4wUazHjmCDBCqXF/d $ZZZ'
 
 # 自定义内容
-sed -i s/OpenWrt /meBenny compiled in $(TZ=UTC-8 date +%Y.%m.%d) @ OpenWrt /g $ZZZ
+sed -i 's/OpenWrt /meBenny compiled in $(TZ=UTC-8 date +%Y.%m.%d) @ OpenWrt /g' $ZZZ
 
 # 修改机器名称
 # sed -i "s/meBenny/$device_name/g" package/base-files/files/bin/config_generate
