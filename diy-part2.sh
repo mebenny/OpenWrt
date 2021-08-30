@@ -30,7 +30,7 @@ sed -i 's/$1$V4UetPzk$CYXluq4wUazHjmCDBCqXF.//g' openwrt/package/lean/default-se
 # sed -i 's/^#\(.*helloworld\)/\1/' feeds.conf.default  #使用源码自带ShadowSocksR Plus+出国软件
 
 # 自定义内容
-sed -i 's/OpenWrt /meBenny compiled in $(TZ=UTC-8 date +%Y.%m.%d) @ OpenWrt /g' $ZZZ
+# sed -i 's/OpenWrt /meBenny compiled in $(TZ=UTC-8 date +%Y.%m.%d) @ OpenWrt /g' $ZZZ
 
 # 修改机器名称
 # sed -i "s/meBenny/$device_name/g" package/base-files/files/bin/config_generate
