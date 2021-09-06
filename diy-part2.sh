@@ -26,9 +26,6 @@ sed -i 's/192.168.1.1/192.168.10.15/g' package/base-files/files/bin/config_gener
 #2. Clear the login password
 sed -i 's/$1$qTM.tEk0$J0I9VtO1JT99G4R2iZKaA.//g' openwrt/package/lean/default-settings/files/zzz-default-settings
 
-#取消掉feeds.conf.default文件里面的helloworld的#注释
-# sed -i 's/^#\(.*helloworld\)/\1/' feeds.conf.default  #使用源码自带ShadowSocksR Plus+出国软件
-
 # 自定义内容
 # sed -i 's/OpenWrt /meBenny compiled in $(TZ=UTC-8 date +%Y.%m.%d) @ OpenWrt /g' $ZZZ
 
