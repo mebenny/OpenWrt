@@ -18,13 +18,13 @@ sed -i 's/192.168.1.1/192.168.10.15/g' package/base-files/files/bin/config_gener
 
 # 修改密码为空
 # sed -i 's/$1$V4UetPzk$CYXluq4wUazHjmCDBCqXF.//g' openwrt/package/lean/default-settings/files/zzz-default-settings
-# sed -i 's/root::0:0:99999:7:::/root:$1$V4UetPzk$CYXluq4wUazHjmCDBCqXF.:0:0:99999:7:::/g' /etc/shadow
+sed -i 's/root::0:0:99999:7:::/root:$1$qTM.tEk0$J0I9VtO1JT99G4R2iZKaA.:18858:0:99999:7:::/g' /etc/shadow
 # ZZZ="package/lean/default-settings/files/zzz-default-settings"
 # sed -i '/CYXluq4wUazHjmCDBCqXF/d' $ZZZ
 # sed -i 's@.*CYXluq4wUazHjmCDBCqXF*@#&@g' package/lean/default-settings/files/zzz-default-settings  #设置密码为空（安装固件时无需密码登陆，然后自己修改想要的密码）
 
 #2. Clear the login password
-sed -i 's/$1$qTM.tEk0$J0I9VtO1JT99G4R2iZKaA.//g' openwrt/package/lean/default-settings/files/zzz-default-settings
+# sed -i 's/$1$qTM.tEk0$J0I9VtO1JT99G4R2iZKaA.//g' openwrt/package/lean/default-settings/files/zzz-default-settings
 
 # 自定义内容
 # sed -i 's/OpenWrt /meBenny compiled in $(TZ=UTC-8 date +%Y.%m.%d) @ OpenWrt /g' $ZZZ
