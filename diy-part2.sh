@@ -14,11 +14,11 @@
 sed -i 's/192.168.1.1/192.168.10.15/g' package/base-files/files/bin/config_generate
 
 # 修改默认主题为luci-theme-argon_new
-# sed -i "s/luci-theme-argon_new/$default_theme/g" feeds/luci/modules/luci-base/root/etc/config/luci
+sed -i "s/luci-theme-bootstrap/luci-theme-opentomcat/g" feeds/luci/collections/luci/Makefile
 
 # 修改密码为空
 # sed -i 's/$1$V4UetPzk$CYXluq4wUazHjmCDBCqXF.//g' openwrt/package/lean/default-settings/files/zzz-default-settings
-sed -i 's/root::0:0:99999:7:::/root:$1$qTM.tEk0$J0I9VtO1JT99G4R2iZKaA.:18858:0:99999:7:::/g' /etc/shadow
+sed -i 's/root::0:0:99999:7:::/root:$1$qTM.tEk0$J0I9VtO1JT99G4R2iZKaA.:18858:0:99999:7:::/g' package/base-files/files/etc/shadow
 # ZZZ="package/lean/default-settings/files/zzz-default-settings"
 # sed -i '/CYXluq4wUazHjmCDBCqXF/d' $ZZZ
 # sed -i 's@.*CYXluq4wUazHjmCDBCqXF*@#&@g' package/lean/default-settings/files/zzz-default-settings  #设置密码为空（安装固件时无需密码登陆，然后自己修改想要的密码）
@@ -30,7 +30,7 @@ sed -i 's/root::0:0:99999:7:::/root:$1$qTM.tEk0$J0I9VtO1JT99G4R2iZKaA.:18858:0:9
 # sed -i 's/OpenWrt /meBenny compiled in $(TZ=UTC-8 date +%Y.%m.%d) @ OpenWrt /g' $ZZZ
 
 # 修改机器名称
-sed -i "s/meBenny/$device_name/g" package/base-files/files/bin/config_generate
+sed -i "s/OpenWrt /Home803/g" package/base-files/files/bin/config_generate
 
 # 修改时区
 # sed -i "s/'UTC'/'CST-8'\n   set system.@system[-1].zonename='$utc_name'/g" package/base-files/files/bin/config_generate
