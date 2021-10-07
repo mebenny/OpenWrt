@@ -21,6 +21,8 @@ echo 'src-git kenzo https://github.com/kenzok8/openwrt-packages' >>feeds.conf.de
 echo 'src-git small https://github.com/kenzok8/small' >>feeds.conf.default
 # git clone https://github.com/pymumu/luci-app-smartdns.git package/lean/luci-app-smartdns
 # git clone https://github.com/rufengsuixing/luci-app-autoipsetadder.git package/lean/luci-app-autoipsetadder
+# 获取日志查看器
+git clone https://github.com/gdck/luci-app-tn-logview package/lean/luci-app-tn-logview
 # 添加luci-app-advanced
 # git clone https://github.com/sirpdboy/luci-app-advanced package/lean/luci-app-advanced
 # autotimeset 定时设置插件
