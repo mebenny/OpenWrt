@@ -7,13 +7,73 @@
 # Author: P3TERX
 # Blog: https://p3terx.com
 #============================================================
+ZZZ="package/lean/default-settings/files/zzz-default-settings"
+# https://github.com/P3TERX/Actions-OpenWrt
+# File name: diy-part2.sh
+# Description: OpenWrt DIY script part 2 (After Update feeds)
+#
 
+# 获取日志查看器
+git clone https://github.com/gdck/luci-app-tn-logview package/lean/luci-app-tn-logview
+
+#本地启动脚本
+#启动脚本插入到 'exit 0' 之前即可随系统启动运行。
+sed -i '3i /etc/init.d/samba stop' package/base-files/files/etc/rc.local #停止samba服务
+sed -i '4i /etc/init.d/samba disable' package/base-files/files/etc/rc.local #禁止samba服务开机自动
+
+#移除不用软件包
+rm -rf package/lean/luci-app-dockerman
+rm -rf package/lean/luci-app-wrtbwmon
+rm -rf package/lean/adbyby
+rm -rf package/lean/luci-app-adbyby-plus
+
+# Modify default IP
+sed -i 's/192.168.1.1/192.168.2.2/g' package/base-files/files/bin/config_generate                  # 修改后台IP地址
+sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' feeds/luci/collections/luci/Makefile            # 选择argon为默认主题
+sed -i "s/OpenWrt /281677160 compiled in $(TZ=UTC-8 date "+%Y.%m.%d") @ OpenWrt /g" $ZZZ           # 增加个性名字 281677160
+sed -i '/CYXluq4wUazHjmCDBCqXF/d' $ZZZ                                                             # 设置密码为空
+
+# 修改网络
+sed -i 's/eth0/eth0 eth2 eth3/' package/base-files/files/etc/board.d/99-default_network
+sed -i '2i # network config' package/lean/default-settings/files/zzz-default-settings
+sed -i "3i uci set network.wan.proto='pppoe'" package/lean/default-settings/files/zzz-default-settings
+sed -i "4i uci set network.wan.username='CD0283366379757'" package/lean/default-settings/files/zzz-default-settings
+sed -i "5i uci set network.wan.password='19701115'" package/lean/default-settings/files/zzz-default-settings
+sed -i "6i uci set network.wan.ifname='eth1'" package/lean/default-settings/files/zzz-default-settings
+sed -i "7i uci set network.wan6.ifname='eth1'" package/lean/default-settings/files/zzz-default-settings
+sed -i '8i uci commit network' package/lean/default-settings/files/zzz-default-settings
+
+# 修改密码
+sed -i 's/V4UetPzk$CYXluq4wUazHjmCDBCqXF.:0/SOP5eWTA$fJV8ty3QohO0chErhlxCm1:18775/g' package/lean/default-settings/files/zzz-default-settings
+
+# 修改默认主题
+sed -i 's/bootstrap/argon/' feeds/luci/collections/luci/Makefile
+
+# 删除文件夹
+rm -rf package/lean/adbyby
+rm -rf package/lean/luci-app-adbyby-plus
+rm -rf package/lean/luci-app-unblockmusic
+rm -rf package/lean/UnblockNeteaseMusic
+rm -rf package/lean/UnblockNeteaseMusicGo
+# 修改插件名字
+sed -i 's/"aMule设置"/"电驴下载"/g' `grep "aMule设置" -rl ./`
+sed -i 's/"网络存储"/"NAS"/g' `grep "网络存储" -rl ./`
+sed -i 's/"Turbo ACC 网络加速"/"网络加速"/g' `grep "Turbo ACC 网络加速" -rl ./`
+sed -i 's/"实时流量监测"/"流量"/g' `grep "实时流量监测" -rl ./`
+sed -i 's/"KMS 服务器"/"KMS激活"/g' `grep "KMS 服务器" -rl ./`
+sed -i 's/"TTYD 终端"/"命令窗"/g' `grep "TTYD 终端" -rl ./`
+sed -i 's/"USB 打印服务器"/"打印服务"/g' `grep "USB 打印服务器" -rl ./`
+sed -i 's/"Web 管理"/"Web"/g' `grep "Web 管理" -rl ./`
+sed -i 's/"管理权"/"改密码"/g' `grep "管理权" -rl ./`
+sed -i 's/"带宽监控"/"监控"/g' `grep "带宽监控" -rl ./`
+sed -i 's/"Argon 主题设置"/"Argon设置"/g' `grep "Argon 主题设置" -rl ./`
 # Modify default IP
 #sed -i 's/192.168.1.1/192.168.50.5/g' package/base-files/files/bin/config_generate
 #移除不用软件包    
 rm -rf package/lean/luci-app-dockerman
 rm -rf package/lean/luci-app-wrtbwmon
 rm -rf feeds/packages/net/smartdns
+
 #添加额外软件包
 git clone https://github.com/destan19/OpenAppFilter.git package/OpenAppFilter
 
