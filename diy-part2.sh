@@ -25,7 +25,7 @@ sed -i "s/OpenWrt/Home803/g" package/base-files/files/bin/config_generate
 sed -i 's/root::0:0:99999:7:::/root:$1$qTM.tEk0$J0I9VtO1JT99G4R2iZKaA.:18858:0:99999:7:::/g' package/base-files/files/etc/shadow
 
 # 打开NTP
-sed -i 's/set system.ntp.enable_server='0'/set system.ntp.enable_server='1'/g' package/base-files/files/bin/config_generate
+sed -i 's/system.ntp.enable_server='0'/system.ntp.enable_server='1'/g' package/base-files/files/bin/config_generate
 
 # 本地启动脚本
 # sed -i 's/+net.netfilter.nf_conntrack_max=65535//g' package/base-files/files/etc/sysctl.conf
