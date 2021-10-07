@@ -12,7 +12,9 @@
 
 # Modify default IP
 sed -i 's/192.168.1.1/192.168.10.15/g' package/base-files/files/bin/config_generate
-
+sed -i 's/+IPV6:libip6tc//g' package/network/config/firewall/Makefile
+sed -i 's/+IPV6:kmod-nf-conntrack6//g' package/network/config/firewall/Makefile
+sed -i 's/+IPV6:libip6tc//g' package/network/utils/iptables/Makefile
 # 修改默认主题
 sed -i "s/luci-theme-bootstrap/luci-theme-opentomcat/g" feeds/luci/collections/luci/Makefile
 
@@ -22,13 +24,16 @@ sed -i "s/OpenWrt/Home803/g" package/base-files/files/bin/config_generate
 # 修改密码
 sed -i 's/root::0:0:99999:7:::/root:$1$qTM.tEk0$J0I9VtO1JT99G4R2iZKaA.:18858:0:99999:7:::/g' package/base-files/files/etc/shadow
 
-# 本地启动脚本
+# 打开NTP
 sed -i 's/set system.ntp.enable_server='0'/set system.ntp.enable_server='1'/g' package/base-files/files/bin/config_generate
-sed -i "s|net.netfilter.nf_conntrack_max=65535|g" package/base-files/files/etc/sysctl.conf
-sed -i "s|net.ipv6.conf.default.forwarding=2|g" package/base-files/files/etc/sysctl.conf
-sed -i "s|net.ipv6.conf.all.forwarding=2|g" package/base-files/files/etc/sysctl.conf
-sed -i "s|net.ipv6.conf.default.accept_ra=2|g" package/base-files/files/etc/sysctl.conf
-sed -i "s|net.ipv6.conf.all.accept_ra=2|g" package/base-files/files/etc/sysctl.conf
+
+# 本地启动脚本
+sed -i 's/+net.netfilter.nf_conntrack_max=65535//g' package/base-files/files/etc/sysctl.conf
+sed -i 's/+net.ipv6.conf.default.forwarding=2//g' package/base-files/files/etc/sysctl.conf
+sed -i 's/+net.ipv6.conf.all.forwarding=2//g' package/base-files/files/etc/sysctl.conf
+sed -i 's/+net.ipv6.conf.default.accept_ra=2//g' package/base-files/files/etc/sysctl.conf
+sed -i 's/+net.ipv6.conf.all.accept_ra=2//g' package/base-files/files/etc/sysctl.conf
+
 #启动脚本插入到 'exit 0' 之前即可随系统启动运行。
 sed -i '3i /etc/init.d/samba stop' package/base-files/files/etc/rc.local #停止samba服务
 sed -i '4i /etc/init.d/samba disable' package/base-files/files/etc/rc.local #禁止samba服务开机自动
