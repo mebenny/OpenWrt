@@ -28,7 +28,8 @@ sed -i 's/root::0:0:99999:7:::/root:$1$qTM.tEk0$J0I9VtO1JT99G4R2iZKaA.:18858:0:9
 #sed -i 's/root:$1$V4UetPzk$CYXluq4wUazHjmCDBCqXF.:0:0:99999:7:::/root:$1$qTM.tEk0$J0I9VtO1JT99G4R2iZKaA.:18858:0:99999:7:::/g' package/lean/default-settings/files/zzz-default-settings
 
 # 打开NTP
-# sed -i 's/system.ntp.enable_server='0'/system.ntp.enable_server='1'/g' package/base-files/files/bin/config_generate
+sed -i "8i uci set system.ntp.enable_server='1'" package/lean/default-settings/files/zzz-default-settings
+# sed -i "s/system.ntp.enable_server='0'/system.ntp.enable_server='1'/g" package/base-files/files/bin/config_generate
 
 # Modify default network connect
 echo 'net.netfilter.nf_conntrack_max=65535' | tee -a package/base-files/files/etc/sysctl.conf
@@ -59,23 +60,6 @@ rm -rf package/lean/luci-app-uugamebooster
 rm -rf package/lean/luci-app-vlmcsd
 rm -rf package/lean/luci-app-vsftpd
 rm -rf package/lean/luci-app-xlnetacc
-rm -rf package/lean/luci-app-jd-dailybonus
-rm -rf package/lean/luci-theme-argon
-rm -rf package/lean/luci-app-netdata
-rm -rf package/lean/luci-app-wireless-regdb
-rm -rf package/lean/luci-app-serverchan
-rm -rf package/lean/luci-app-pushbot
-rm -rf package/lean/luci-app-ahcp
-rm -rf package/lean/luci-app-amule
-rm -rf package/lean/luci-app-kodexplorer
-rm -rf package/lean/luci-app-vnstat
-rm -rf feeds/packages/net/smartdns
-rm -rf feeds/luci/applications/luci-app-openclash
-rm -rf feeds/luci/applications/luci-app-passwall
-rm -rf feeds/luci/applications/luci-app-vssr
-
-# 修改时区
-# sed -i "s/'UTC'/'CST-8'\n   set system.@system[-1].zonename='$utc_name'/g" package/base-files/files/bin/config_generate
 
 ./scripts/feeds update -a
 ./scripts/feeds install -a
