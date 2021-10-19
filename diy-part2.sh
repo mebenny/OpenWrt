@@ -47,18 +47,33 @@ sed -i '3i /etc/init.d/samba stop' package/base-files/files/etc/rc.local #停止
 sed -i '4i /etc/init.d/samba disable' package/base-files/files/etc/rc.local #禁止samba服务开机自动
 
 # Remove some default packages
-sed -i 's/luci-app-ddns//g;s/luci-app-upnp//g;s/luci-app-adbyby-plus//g;s/luci-app-vsftpd//g;s/luci-app-ssr-plus//g;s/luci-app-unblockmusic//g;s/luci-app-vlmcsd//g;s/luci-app-wol//g;s/luci-app-nlbwmon//g;s/luci-app-accesscontrol//g' include/target.mk
+sed -i 's/luci-app-accesscontrol//g;s/luci-app-adbyby-plus//g;s/luci-app-ddns//g;s/luci-app-ipsec-vpnd//g;s/luci-app-nlbwmon//g;s/luci-app-qbittorrent//g;s/luci-app-unblockmusic//g;s/luci-app-uugamebooster//g;s/luci-app-vlmcsd//g;s/luci-app-vsftpd//g;s/luci-app-xlnetacc//g' include/target.mk
 
 #移除不用软件包
+rm -rf package/lean/luci-app-accesscontrol
+rm -rf package/lean/luci-app-adbyby-plus
+rm -rf package/lean/luci-app-ddns
+rm -rf package/lean/luci-app-ipsec-vpnd
+rm -rf package/lean/luci-app-nlbwmon
+rm -rf package/lean/luci-app-qbittorrent
 rm -rf package/lean/luci-app-dockerman
 rm -rf package/lean/luci-app-wrtbwmon
 rm -rf package/lean/adbyby
 rm -rf package/lean/luci-app-unblockmusic
-rm -rf package/lean/UnblockNeteaseMusic
-rm -rf package/lean/UnblockNeteaseMusicGo
+rm -rf package/lean/luci-app-uugamebooster
+rm -rf package/lean/luci-app-vlmcsd
+rm -rf package/lean/luci-app-vsftpd
+rm -rf package/lean/luci-app-xlnetacc
 rm -rf package/lean/luci-app-jd-dailybonus
 rm -rf package/lean/luci-theme-argon
 rm -rf package/lean/luci-app-netdata
+rm -rf package/lean/luci-app-wireless-regdb
+rm -rf package/lean/luci-app-serverchan
+rm -rf package/lean/luci-app-pushbot
+rm -rf package/lean/luci-app-ahcp
+rm -rf package/lean/luci-app-amule
+rm -rf package/lean/luci-app-kodexplorer
+rm -rf package/lean/luci-app-vnstat
 rm -rf feeds/packages/net/smartdns
 rm -rf feeds/luci/applications/luci-app-openclash
 rm -rf feeds/luci/applications/luci-app-passwall
