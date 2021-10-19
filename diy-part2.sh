@@ -28,19 +28,14 @@ sed -i 's/root::0:0:99999:7:::/root:$1$qTM.tEk0$J0I9VtO1JT99G4R2iZKaA.:18858:0:9
 #sed -i 's/root:$1$V4UetPzk$CYXluq4wUazHjmCDBCqXF.:0:0:99999:7:::/root:$1$qTM.tEk0$J0I9VtO1JT99G4R2iZKaA.:18858:0:99999:7:::/g' package/lean/default-settings/files/zzz-default-settings
 
 # 打开NTP
-sed -i 's/system.ntp.enable_server='0'/system.ntp.enable_server='1'/g' package/base-files/files/bin/config_generate
+# sed -i 's/system.ntp.enable_server='0'/system.ntp.enable_server='1'/g' package/base-files/files/bin/config_generate
 
 # Modify default network connect
 echo 'net.netfilter.nf_conntrack_max=65535' | tee -a package/base-files/files/etc/sysctl.conf
 echo 'net.ipv6.conf.default.forwarding=2' | tee -a package/base-files/files/etc/sysctl.conf
 echo 'net.ipv6.conf.all.forwarding=2' | tee -a package/base-files/files/etc/sysctl.conf
 echo 'net.ipv6.conf.default.accept_ra=2' | tee -a package/base-files/files/etc/sysctl.conf
-echo ' net.ipv6.conf.all.accept_ra=2' | tee -a package/base-files/files/etc/sysctl.conf
-# sed -i "2i net.netfilter.nf_conntrack_max=65535" ./package/base-files/files/etc/sysctl.conf
-# sed -i "3i net.ipv6.conf.default.forwarding=2" ./package/base-files/files/etc/sysctl.conf
-# sed -i "4i net.ipv6.conf.all.forwarding=2" ./package/base-files/files/etc/sysctl.conf
-# sed -i "5i net.ipv6.conf.default.accept_ra=2" ./package/base-files/files/etc/sysctl.conf
-# sed -i "6i net.ipv6.conf.all.accept_ra=2" ./package/base-files/files/etc/sysctl.conf
+echo 'net.ipv6.conf.all.accept_ra=2' | tee -a package/base-files/files/etc/sysctl.conf
 
 #启动脚本插入到 'exit 0' 之前即可随系统启动运行。
 sed -i '3i /etc/init.d/samba stop' package/base-files/files/etc/rc.local #停止samba服务
