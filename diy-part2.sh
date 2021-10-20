@@ -38,11 +38,17 @@ echo 'net.ipv6.conf.all.forwarding=2' | tee -a package/base-files/files/etc/sysc
 echo 'net.ipv6.conf.default.accept_ra=2' | tee -a package/base-files/files/etc/sysctl.conf
 echo 'net.ipv6.conf.all.accept_ra=2' | tee -a package/base-files/files/etc/sysctl.conf
 
-echo 'WAN6=eth3' | tee -a package/network/config/firewall/files/firewall.user
-echo 'LAN=br-lan' | tee -a package/network/config/firewall/files/firewall.user
-echo 'ip6tables -t nat -A POSTROUTING -o $WAN6 -j MASQUERADE' | tee -a package/network/config/firewall/files/firewall.user
-echo 'ip6tables -A FORWARD -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT' | tee -a package/network/config/firewall/files/firewall.user
-echo 'ip6tables -A FORWARD -i $LAN -j ACCEPT' | tee -a package/network/config/firewall/files/firewall.user
+# echo 'WAN6=eth3' | tee -a package/network/config/firewall/files/firewall.user
+# echo 'LAN=br-lan' | tee -a package/network/config/firewall/files/firewall.user
+# echo 'ip6tables -t nat -A POSTROUTING -o $WAN6 -j MASQUERADE' | tee -a package/network/config/firewall/files/firewall.user
+# echo 'ip6tables -A FORWARD -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT' | tee -a package/network/config/firewall/files/firewall.user
+# echo 'ip6tables -A FORWARD -i $LAN -j ACCEPT' | tee -a package/network/config/firewall/files/firewall.user
+
+sed -i "45i WAN6=eth3" package/lean/default-settings/files/zzz-default-settings
+sed -i "46i LAN=br-lan" package/lean/default-settings/files/zzz-default-settings
+sed -i "47i ip6tables -t nat -A POSTROUTING -o $WAN6 -j MASQUERADE" package/lean/default-settings/files/zzz-default-settings
+sed -i "48i ip6tables -A FORWARD -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT" package/lean/default-settings/files/zzz-default-settings
+sed -i "49i ip6tables -A FORWARD -i $LAN -j ACCEPT" package/lean/default-settings/files/zzz-default-settings
 
 #启动脚本插入到 'exit 0' 之前即可随系统启动运行。
 sed -i '3i /etc/init.d/samba stop' package/base-files/files/etc/rc.local #停止samba服务
