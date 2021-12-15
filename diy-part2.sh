@@ -72,6 +72,7 @@ rm -rf package/lean/luci-app-uugamebooster
 rm -rf package/lean/luci-app-vlmcsd
 rm -rf package/lean/luci-app-vsftpd
 rm -rf package/lean/luci-app-xlnetacc
+rm -rf package/lean/wol
 
 ./scripts/feeds update -a
 ./scripts/feeds install -a
