@@ -55,7 +55,7 @@ sed -i '3i /etc/init.d/samba stop' package/base-files/files/etc/rc.local #停止
 sed -i '4i /etc/init.d/samba disable' package/base-files/files/etc/rc.local #禁止samba服务开机自动
 
 # Remove some default packages
-sed -i 's/luci-app-accesscontrol//g;s/luci-app-adbyby-plus//g;s/luci-app-ddns//g;s/luci-app-ipsec-vpnd//g;s/luci-app-nlbwmon//g;s/luci-app-qbittorrent//g;s/luci-app-unblockmusic//g;s/luci-app-uugamebooster//g;s/luci-app-vlmcsd//g;s/luci-app-vsftpd//g;s/luci-app-xlnetacc//g' include/target.mk
+sed -i 's/luci-app-accesscontrol//g;s/luci-app-adbyby-plus//g;s/luci-app-ddns//g;s/luci-app-ipsec-vpnd//g;s/luci-app-nlbwmon//g;s/luci-app-qbittorrent//g;s/luci-app-unblockmusic//g;s/luci-app-uugamebooster//g;s/luci-app-vlmcsd//g;s/luci-app-vsftpd//g;s/luci-app-xlnetacc//g;s/luci-app-wol//g' include/target.mk
 
 #移除不用软件包
 rm -rf package/lean/luci-app-accesscontrol
@@ -72,7 +72,6 @@ rm -rf package/lean/luci-app-uugamebooster
 rm -rf package/lean/luci-app-vlmcsd
 rm -rf package/lean/luci-app-vsftpd
 rm -rf package/lean/luci-app-xlnetacc
-rm -rf package/lean/wol
 
 ./scripts/feeds update -a
 ./scripts/feeds install -a
