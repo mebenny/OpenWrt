@@ -24,7 +24,7 @@ echo 'src-git small https://github.com/kenzok8/small' >>feeds.conf.default
 # IPTV
 git clone https://github.com/riverscn/luci-app-omcproxy.git package/lean/luci-app-omcproxy
 git clone https://github.com/riverscn/openwrt-iptvhelper.git package/lean/luci-app-iptvhelper
-git clone https://github.com/sirpdboy/sirpdboy-package/tree/main/luci-app-control-timewol.git package/lean/luci-app-control-timewol
+git clone https://github.com/sirpdboy/sirpdboy-package/luci-app-control-timewol.git package/lean/luci-app-control-timewol
 # 获取日志查看器
 # git clone https://github.com/gdck/luci-app-tn-logview package/lean/luci-app-tn-logview
 # 添加luci-app-advanced
