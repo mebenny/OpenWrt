@@ -23,6 +23,7 @@
 # git clone https://github.com/rufengsuixing/luci-app-autoipsetadder.git package/lean/luci-app-autoipsetadder
 # IPTV
 echo 'src-git dansir118 https://github.com/dansir118/openwrt-packages' >>feeds.conf.default
+echo 'src-git opentopd  https://github.com/sirpdboy/luci-theme-opentopd' >>feeds.conf.default
 # git clone https://github.com/riverscn/luci-app-omcproxy.git package/lean/luci-app-omcproxy
 # git clone https://github.com/riverscn/openwrt-iptvhelper.git package/lean/luci-app-iptvhelper
 # 获取日志查看器
