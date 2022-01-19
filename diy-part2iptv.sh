@@ -45,7 +45,6 @@ rm -rf package/lean/luci-app-ddns
 rm -rf package/lean/luci-app-ipsec-vpnd
 rm -rf package/lean/luci-app-nlbwmon
 rm -rf package/lean/luci-app-qbittorrent
-rm -rf package/lean/luci-app-dockerman
 rm -rf package/lean/luci-app-wrtbwmon
 rm -rf package/lean/adbyby
 rm -rf package/lean/luci-app-unblockmusic
