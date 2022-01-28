@@ -11,7 +11,7 @@
 #
 
 # Modify default IP
-sed -i 's/192.168.1.1/192.168.10.15/g' package/base-files/files/bin/config_generate
+sed -i 's/192.168.1.1/192.168.111.1/g' package/base-files/files/bin/config_generate
 # sed -i 's/+IPV6:libip6tc//g' package/network/config/firewall/Makefile
 # sed -i 's/+IPV6:kmod-nf-conntrack6//g' package/network/config/firewall/Makefile
 # sed -i 's/+IPV6:libip6tc//g' package/network/utils/iptables/Makefile
