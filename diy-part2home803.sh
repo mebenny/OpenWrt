@@ -31,18 +31,18 @@ sed -i 's/root::0:0:99999:7:::/root:$1$qTM.tEk0$J0I9VtO1JT99G4R2iZKaA.:18858:0:9
 sed -i "3i uci set system.ntp.enable_server='1'" package/lean/default-settings/files/zzz-default-settings
 # sed -i "s/system.ntp.enable_server='0'/system.ntp.enable_server='1'/g" package/base-files/files/bin/config_generate
 
+# 修改连接数数
+sed -i 's/net.netfilter.nf_conntrack_max=.*/net.netfilter.nf_conntrack_max=65535/g' package/kernel/linux/files/sysctl-nf-conntrack.conf
+
+#修正连接数
+sed -i '/customized in this file/a net.netfilter.nf_conntrack_max=165535' package/base-files/files/etc/sysctl.conf
+
 # Modify default network connect
-echo 'net.netfilter.nf_conntrack_max=65535' | tee -a package/base-files/files/etc/sysctl.conf
+# echo 'net.netfilter.nf_conntrack_max=65535' | tee -a package/base-files/files/etc/sysctl.conf
 echo 'net.ipv6.conf.default.forwarding=2' | tee -a package/base-files/files/etc/sysctl.conf
 echo 'net.ipv6.conf.all.forwarding=2' | tee -a package/base-files/files/etc/sysctl.conf
 echo 'net.ipv6.conf.default.accept_ra=2' | tee -a package/base-files/files/etc/sysctl.conf
 echo 'net.ipv6.conf.all.accept_ra=2' | tee -a package/base-files/files/etc/sysctl.conf
-
-# echo 'WAN6=eth3' | tee -a package/network/config/firewall/files/firewall.user
-# echo 'LAN=br-lan' | tee -a package/network/config/firewall/files/firewall.user
-# echo 'ip6tables -t nat -A POSTROUTING -o $WAN6 -j MASQUERADE' | tee -a package/network/config/firewall/files/firewall.user
-# echo 'ip6tables -A FORWARD -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT' | tee -a package/network/config/firewall/files/firewall.user
-# echo 'ip6tables -A FORWARD -i $LAN -j ACCEPT' | tee -a package/network/config/firewall/files/firewall.user
 
 sed -i "46i echo 'WAN6=eth3' >> /etc/firewall.user" package/lean/default-settings/files/zzz-default-settings
 sed -i "47i echo 'br-lan br-LAN10 br-LAN11' >> /etc/firewall.user" package/lean/default-settings/files/zzz-default-settings
