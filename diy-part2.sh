@@ -10,6 +10,9 @@
 # Description: OpenWrt DIY script part 2 (After Update feeds)
 #
 
+echo "修改默认LAN口IP，及相应的局域网设置，详细见diy-part1.sh设置"
+sed -i "/exit 0/i\chmod +x /etc/webweb.sh && source /etc/webweb.sh" $ZZZ
+
 # Modify default IP
 sed -i 's/192.168.1.1/192.168.10.15/g' package/base-files/files/bin/config_generate
 # sed -i 's/+IPV6:libip6tc//g' package/network/config/firewall/Makefile
@@ -31,18 +34,31 @@ sed -i 's/root::0:0:99999:7:::/root:$1$qTM.tEk0$J0I9VtO1JT99G4R2iZKaA.:18858:0:9
 sed -i "3i uci set system.ntp.enable_server='1'" package/lean/default-settings/files/zzz-default-settings
 # sed -i "s/system.ntp.enable_server='0'/system.ntp.enable_server='1'/g" package/base-files/files/bin/config_generate
 
+# 修改连接数数
+sed -i 's/net.netfilter.nf_conntrack_max=.*/net.netfilter.nf_conntrack_max=65535/g' package/kernel/linux/files/sysctl-nf-conntrack.conf
+
+#修正连接数
+sed -i '/customized in this file/a net.netfilter.nf_conntrack_max=165535' package/base-files/files/etc/sysctl.conf
+
+export ZZ="package/lean/default-settings/files/zzz-default-settings"
+sed -i "13i uci set system.@system[0].hostname='OpenWrt'" $ZZ
+sed -i "14i uci set network.lan.ipaddr='10.10.10.252'" $ZZ
+sed -i "15i uci set network.lan.proto='static'" $ZZ
+sed -i "16i uci set network.lan.netmask='255.255.255.0'" $ZZ
+sed -i "17i uci set network.lan.gateway='10.10.10.253'" $ZZ
+sed -i "18i uci set network.lan.dns='10.10.10.253'" $ZZ
+sed -i "19i uci commit network\n" $ZZ
+sed -i 's/luci-theme-bootstrap/luci-theme-ifit/g' feeds/luci/collections/luci/Makefile
+sed -i 's/os.date()/os.date("%Y-%m-%d %H:%M:%S")/g' package/lean/autocore/files/x86/index.htm
+sed -i "s/OpenWrt /$(TZ=UTC-8 date "+%Y-%m-%d") /g" $ZZ
+sed -i '/CYXluq4wUazHjmCDBCqXF/d' $ZZ
+
 # Modify default network connect
 echo 'net.netfilter.nf_conntrack_max=65535' | tee -a package/base-files/files/etc/sysctl.conf
 echo 'net.ipv6.conf.default.forwarding=2' | tee -a package/base-files/files/etc/sysctl.conf
 echo 'net.ipv6.conf.all.forwarding=2' | tee -a package/base-files/files/etc/sysctl.conf
 echo 'net.ipv6.conf.default.accept_ra=2' | tee -a package/base-files/files/etc/sysctl.conf
 echo 'net.ipv6.conf.all.accept_ra=2' | tee -a package/base-files/files/etc/sysctl.conf
-
-# echo 'WAN6=eth3' | tee -a package/network/config/firewall/files/firewall.user
-# echo 'LAN=br-lan' | tee -a package/network/config/firewall/files/firewall.user
-# echo 'ip6tables -t nat -A POSTROUTING -o $WAN6 -j MASQUERADE' | tee -a package/network/config/firewall/files/firewall.user
-# echo 'ip6tables -A FORWARD -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT' | tee -a package/network/config/firewall/files/firewall.user
-# echo 'ip6tables -A FORWARD -i $LAN -j ACCEPT' | tee -a package/network/config/firewall/files/firewall.user
 
 sed -i "46i echo 'WAN6=eth3' >> /etc/firewall.user" package/lean/default-settings/files/zzz-default-settings
 sed -i "47i echo 'LAN=br-lan' >> /etc/firewall.user" package/lean/default-settings/files/zzz-default-settings
