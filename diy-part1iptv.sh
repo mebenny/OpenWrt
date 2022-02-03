@@ -47,7 +47,7 @@ uci set network.lan.broadcast='192.168.10.255'                      # IPv4 广�
 uci set network.lan.dns='192.168.10.1'                              # DNS(多个DNS要用空格分开)
 uci set network.lan.delegate='0'                                    # 去掉LAN口使用内置的 IPv6 管理
 uci set network.lan.ifname='eth0'                                   # 设置lan口物理接口为eth0、eth1
-uci set network.lan.mtu='1492'                                      # lan口mtu设置为1492
+# uci set network.lan.mtu='1492'                                      # lan口mtu设置为1492
 uci commit network                                                  # 不要删除跟注释,除非上面全部删除或注释掉了
 uci delete dhcp.lan.ra                                              # 路由通告服务，设置为“已禁用”
 uci delete dhcp.lan.ra_management                                   # 路由通告服务，设置为“已禁用”
