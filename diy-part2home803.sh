@@ -45,8 +45,8 @@ echo 'net.ipv6.conf.all.forwarding=2' | tee -a package/base-files/files/etc/sysc
 echo 'net.ipv6.conf.default.accept_ra=2' | tee -a package/base-files/files/etc/sysctl.conf
 echo 'net.ipv6.conf.all.accept_ra=2' | tee -a package/base-files/files/etc/sysctl.conf
 
-sed -i "46i echo 'WAN6=eth3' >> /etc/firewall.user" package/lean/default-settings/files/zzz-default-settings
-sed -i "47i echo 'LAN=br-lan br-lan10 br-lan11' >> /etc/firewall.user" package/lean/default-settings/files/zzz-default-settings
+sed -i "46i echo 'wan6=eth3' >> /etc/firewall.user" package/lean/default-settings/files/zzz-default-settings
+sed -i "47i echo 'lan=br-lan br-lan10 br-lan11' >> /etc/firewall.user" package/lean/default-settings/files/zzz-default-settings
 sed -i "48i echo 'ip6tables -t nat -A POSTROUTING -o $WAN6 -j MASQUERADE' >> /etc/firewall.user" package/lean/default-settings/files/zzz-default-settings
 sed -i "49i echo 'ip6tables -A FORWARD -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT' >> /etc/firewall.user" package/lean/default-settings/files/zzz-default-settings
 sed -i "50i echo 'ip6tables -A FORWARD -i $LAN -j ACCEPT' >> /etc/firewall.user" package/lean/default-settings/files/zzz-default-settings
