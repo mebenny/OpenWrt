@@ -44,15 +44,16 @@ echo 'net.ipv6.conf.all.forwarding=2' | tee -a package/base-files/files/etc/sysc
 echo 'net.ipv6.conf.default.accept_ra=2' | tee -a package/base-files/files/etc/sysctl.conf
 echo 'net.ipv6.conf.all.accept_ra=2' | tee -a package/base-files/files/etc/sysctl.conf
 
-sed -i "46i echo 'WAN6=eth3' >> /etc/firewall.user" package/lean/default-settings/files/zzz-default-settings
-sed -i "47i echo 'LAN=br-lan br-lan10 br-lan11' >> /etc/firewall.user" package/lean/default-settings/files/zzz-default-settings
-sed -i "48i echo 'ip6tables -t nat -A POSTROUTING -o $WAN6 -j MASQUERADE' >> /etc/firewall.user" package/lean/default-settings/files/zzz-default-settings
-sed -i "49i echo 'ip6tables -A FORWARD -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT' >> /etc/firewall.user" package/lean/default-settings/files/zzz-default-settings
-sed -i "50i echo 'ip6tables -A FORWARD -i $LAN -j ACCEPT' >> /etc/firewall.user" package/lean/default-settings/files/zzz-default-settings
+# 防火墙自定义规则
+sed -i "44i echo 'WAN6=eth3' >> /etc/firewall.user" package/lean/default-settings/files/zzz-default-settings
+sed -i "45i echo 'LAN=br-lan br-lan10 br-lan11' >> /etc/firewall.user" package/lean/default-settings/files/zzz-default-settings
+sed -i "46i echo 'ip6tables -t nat -A POSTROUTING -o $WAN6 -j MASQUERADE' >> /etc/firewall.user" package/lean/default-settings/files/zzz-default-settings
+sed -i "47i echo 'ip6tables -A FORWARD -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT' >> /etc/firewall.user" package/lean/default-settings/files/zzz-default-settings
+sed -i "48i echo 'ip6tables -A FORWARD -i $LAN -j ACCEPT' >> /etc/firewall.user" package/lean/default-settings/files/zzz-default-settings
 
 #启动脚本插入到 'exit 0' 之前即可随系统启动运行。
-sed -i '3i /etc/init.d/samba stop' package/base-files/files/etc/rc.local #停止samba服务
-sed -i '4i /etc/init.d/samba disable' package/base-files/files/etc/rc.local #禁止samba服务开机自动
+# sed -i '3i /etc/init.d/samba stop' package/base-files/files/etc/rc.local #停止samba服务
+# sed -i '4i /etc/init.d/samba disable' package/base-files/files/etc/rc.local #禁止samba服务开机自动
 
 # Remove some default packages
 sed -i 's/luci-app-accesscontrol//g;s/luci-app-adbyby-plus//g;s/luci-app-ddns//g;s/luci-app-ipsec-vpnd//g;s/luci-app-nlbwmon//g;s/luci-app-qbittorrent//g;s/luci-app-unblockmusic//g;s/luci-app-uugamebooster//g;s/luci-app-vlmcsd//g;s/luci-app-ttyd//g;s/luci-app-xlnetacc//g;s/luci-app-wol//g' include/target.mk
