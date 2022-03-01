@@ -18,8 +18,6 @@ sed -i 's/192.168.1.1/192.168.10.77/g' package/base-files/files/bin/config_gener
 
 # Modify default NAT
 export ZZ="package/lean/default-settings/files/zzz-default-settings"
-sed -i "11i uci delete network.wan 
-sed -i "12i uci delete network.wan6
 sed -i "13i uci set network.lan.ifname 'eth0'" $ZZ
 sed -i "14i uci set network.lan._orig_ifname 'eth0'" $ZZ
 sed -i "15i uci set network.lan._orig_bridge 'true'" $ZZ
