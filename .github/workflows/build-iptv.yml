@@ -54,6 +54,10 @@ jobs:
         sudo mkdir -p /workdir
         sudo chown $USER:$GROUPS /workdir
 
+        echo "NETIP=package/base-files/files/etc/networkip" >> $GITHUB_ENV
+        echo "WEBWEB=package/base-files/files/etc/webweb.sh" >> $GITHUB_ENV
+        echo "ZZZ=package/lean/default-settings/files/zzz-default-settings" >> $GITHUB_ENV
+
     - name: Clone source code
       working-directory: /workdir
       run: |
