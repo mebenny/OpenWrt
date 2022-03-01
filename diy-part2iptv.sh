@@ -58,7 +58,7 @@ sed -i '/customized in this file/a net.netfilter.nf_conntrack_max=65535' package
 sed -i "45i echo 'iptables -t nat -I POSTROUTING -j MASQUERADE' >> /etc/firewall.user" package/lean/default-settings/files/zzz-default-settings
 
 # Remove some default packages
-sed -i 's/luci-app-arpbind//g;s/luci-app-turboacc//g;s/luci-app-upnp//g;s/luci-app-ssr-plus//g;s/luci-app-accesscontrol//g;s/luci-app-adbyby-plus//g;s/luci-app-ddns//g;s/luci-app-ipsec-vpnd//g;s/luci-app-nlbwmon//g;s/luci-app-qbittorrent//g;s/luci-app-unblockmusic//g;s/luci-app-uugamebooster//g;s/luci-app-vlmcsd//g;s/luci-app-ttyd//g;s/luci-app-xlnetacc//g;s/luci-app-wol//g' include/target.mk
+sed -i 's/luci-app-arpbind//g;s/luci-app-turboacc//g;s/luci-app-upnp//g;s/luci-app-ssr-plus//g;s/luci-app-adbyby-plus//g;s/luci-app-accesscontrol//g;s/luci-app-ddns//g;s/luci-app-ipsec-vpnd//g;s/luci-app-nlbwmon//g;s/luci-app-qbittorrent//g;s/luci-app-unblockmusic//g;s/luci-app-uugamebooster//g;s/luci-app-vlmcsd//g;s/luci-app-ttyd//g;s/luci-app-xlnetacc//g;s/luci-app-wol//g' include/target.mk
 
 #移除不用软件包
 rm -rf package/luci-app-arpbind
