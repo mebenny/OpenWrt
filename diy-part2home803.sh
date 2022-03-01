@@ -45,11 +45,11 @@ echo 'net.ipv6.conf.default.accept_ra=2' | tee -a package/base-files/files/etc/s
 echo 'net.ipv6.conf.all.accept_ra=2' | tee -a package/base-files/files/etc/sysctl.conf
 
 # 防火墙自定义规则
-sed -i "44i echo 'WAN6=eth3' >> /etc/firewall.user" package/lean/default-settings/files/zzz-default-settings
-sed -i "45i echo 'LAN=br-lan br-lan10 br-lan11' >> /etc/firewall.user" package/lean/default-settings/files/zzz-default-settings
-sed -i "46i echo 'ip6tables -t nat -A POSTROUTING -o $WAN6 -j MASQUERADE' >> /etc/firewall.user" package/lean/default-settings/files/zzz-default-settings
-sed -i "47i echo 'ip6tables -A FORWARD -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT' >> /etc/firewall.user" package/lean/default-settings/files/zzz-default-settings
-sed -i "48i echo 'ip6tables -A FORWARD -i $LAN -j ACCEPT' >> /etc/firewall.user" package/lean/default-settings/files/zzz-default-settings
+sed -i "45i echo 'WAN6=eth3' >> /etc/firewall.user" package/lean/default-settings/files/zzz-default-settings
+sed -i "46i echo 'LAN=br-lan br-lan10 br-lan11' >> /etc/firewall.user" package/lean/default-settings/files/zzz-default-settings
+sed -i "47i echo 'ip6tables -t nat -A POSTROUTING -o $WAN6 -j MASQUERADE' >> /etc/firewall.user" package/lean/default-settings/files/zzz-default-settings
+sed -i "48i echo 'ip6tables -A FORWARD -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT' >> /etc/firewall.user" package/lean/default-settings/files/zzz-default-settings
+sed -i "49i echo 'ip6tables -A FORWARD -i $LAN -j ACCEPT' >> /etc/firewall.user" package/lean/default-settings/files/zzz-default-settings
 
 #启动脚本插入到 'exit 0' 之前即可随系统启动运行。
 # sed -i '3i /etc/init.d/samba stop' package/base-files/files/etc/rc.local #停止samba服务
