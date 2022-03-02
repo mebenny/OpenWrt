@@ -21,15 +21,20 @@
 # echo 'src-git small https://github.com/kenzok8/small' >>feeds.conf.default
 # git clone https://github.com/pymumu/luci-app-smartdns.git package/lean/luci-app-smartdns
 # git clone https://github.com/rufengsuixing/luci-app-autoipsetadder.git package/lean/luci-app-autoipsetadder
+
 # IPTV
 echo 'src-git mebenny https://github.com/mebenny/openwrt-packages' >>feeds.conf.default
+
 # echo 'src-git opentopd https://github.com/sirpdboy/luci-theme-opentopd' >>feeds.conf.default
 # git clone https://github.com/sirpdboy/luci-theme-opentopd.git package/lean/luci-theme-opentopd
 # git clone https://github.com/riverscn/luci-app-omcproxy.git package/lean/luci-app-omcproxy
 # git clone https://github.com/riverscn/openwrt-iptvhelper.git package/lean/luci-app-iptvhelper
+
 # 获取日志查看器
-# git clone https://github.com/gdck/luci-app-tn-logview package/lean/luci-app-tn-logview
+git clone https://github.com/gdck/luci-app-tn-logview.git package/lean/luci-app-tn-logview
+
 # 添加luci-app-advanced
 # git clone https://github.com/sirpdboy/luci-app-advanced.git package/lean/luci-app-advanced
+
 # autotimeset 定时设置插件
-# git clone https://github.com/sirpdboy/luci-app-autotimeset.git package/lean/luci-app-autotimeset
+git clone https://github.com/sirpdboy/luci-app-autotimeset.git package/lean/luci-app-autotimeset
