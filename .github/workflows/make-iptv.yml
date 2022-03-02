@@ -1,6 +1,12 @@
-# This is a basic workflow to help you get started with Actions
+#=================================================
+# https://github.com/P3TERX/Actions-OpenWrt
+# Description: Build OpenWrt using GitHub Actions
+# Lisence: MIT
+# Author: P3TERX
+# Blog: https://p3terx.com
+#=================================================
 
-name: Make X86-64 Config 
+name: make-iptv
 
 on:
   repository_dispatch:
@@ -11,16 +17,26 @@ on:
         required: false
         default: 'false'
   #schedule:
-  #  - cron: 0 2 * * 4
-    
+    #- cron: 0 1 * * 4
+
 env:
   REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
+  #FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: build/X86/x86-64.config
   DIY_P1_SH: build/X86/diy-part1.sh
   DIY_P2_SH: build/X86/diy-part2.sh
-  TZ: Asia/Shanghai
   SSH_ACTIONS: false
+  UPLOAD_CONFIG: true
+  UPLOAD_BIN_DIR: true
+  UPLOAD_FIRMWARE: false
+  UPLOAD_COWTRANSFER: false
+  UPLOAD_WETRANSFER: false
+  UPLOAD_RELEASE: true
+  SERVERCHAN_SCKEY: false
+  BOT: true
+  RECENT_LASTEST: 3
+  TZ: Asia/Shanghai
 
 jobs:
   build:
@@ -44,11 +60,10 @@ jobs:
         sudo mkdir -p /workdir
         sudo chown $USER:$GROUPS /workdir
         
-        sudo mkdir -p /upload
-        sudo chown $USER:$GROUPS /upload
-        
-        cd /upload
-        echo "UPLOAD=$PWD" >> $GITHUB_ENV
+        echo "FILE_CHN_TIME=$(date "+%Y年%m月%d日-%H点")" >> $GITHUB_ENV
+        echo "FILE_RELEASE_TIME=$(date "+%Y-%m-%d %H:%M")"  >> $GITHUB_ENV
+        echo "FILE_UPLOAD_TIME=$(date "+%Y%m%d-%H%M")"  >> $GITHUB_ENV
+        echo "tag_name=$(date "+%Y%m%d%H%M")"  >> $GITHUB_ENV
         echo "NETIP=package/base-files/files/etc/networkip" >> $GITHUB_ENV
         echo "WEBWEB=package/base-files/files/etc/webweb.sh" >> $GITHUB_ENV
         echo "ZZZ=package/lean/default-settings/files/zzz-default-settings" >> $GITHUB_ENV
@@ -59,7 +74,7 @@ jobs:
         df -hT $PWD
         git clone $REPO_URL -b $REPO_BRANCH openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
-        
+           
     - name: Load custom configuration 1 | 加载自定义设置 1
       run: |
         #[ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
@@ -76,17 +91,32 @@ jobs:
     - name: Load custom configuration 2 | 加载自定义设置 2
       run: |
         [ -e files ] && mv files openwrt/files
-        [ -e $CONFIG_FILE ] && mv -f $CONFIG_FILE openwrt/.config
+        [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
         chmod +x $DIY_P2_SH
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_P2_SH
+        
+    - name: SSH connection to Actions | SSH链接管理
+      uses: P3TERX/ssh2actions@v1.0.0
+      if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
+      env:
+        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
 
-    - name: Make Config | 生成config
-      run: |     
+    - name: Make deconfig | 生成配置文件
+      id: makedeconfig
+      run: |
         cd openwrt
-        ls -a
         make defconfig
         echo "TARGET_BOARD=$(awk -F '[="]+' '/TARGET_BOARD/{print $2}' .config)" >> $GITHUB_ENV
+    - name: Upload .config | 上传.config到github
+      uses: actions/upload-artifact@main
+      if: steps.makedeconfig.outputs.status == 'success' && env.UPLOAD_CONFIG == 'true' && !cancelled()      
+      with:
+        name: x86-64.config
+        path: .config
+        retention-days: 7
+        if-no-files-found: ignore
         
     - name: Get patchver | 查询CPU型号、内核版本
       continue-on-error: true
@@ -112,23 +142,77 @@ jobs:
         cpuinfo=`cat /proc/cpuinfo | grep name | cut -f2 -d: | uniq -c | sed 's/      //'`
         echo "CPU型号：${cpuinfo}"
         
-    - name: SSH connection to Actions | SSH链接管理
-      uses: P3TERX/ssh2actions@v1.0.0
-      if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
-      env:
-        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-
-    - name: Make diffonfig | 生成diff.config
+    - name: Download package | 下载安装包
+      id: package
       run: |
         cd openwrt
-        sudo bash scripts/diffconfig.sh > diff.config
-        cp .config ${UPLOAD}/x86-64.config
-        cp diff.config ${UPLOAD}/x86-64-diff.config
-        cp .config.old ${UPLOAD}/x86-64.config.old
+        make download -j8
+        find dl -size -1024c -exec ls -l {} \;
+        find dl -size -1024c -exec rm -f {} \;
         
-    - name: Upload Config | 上传config至github actions
-      uses: actions/upload-artifact@master
+    - name: Compile the firmware | 开始编译固件
+      id: compile
+      run: |
+        cd openwrt
+        echo -e "$(nproc) thread compile"
+        make -j$(nproc) || make -j1 || make -j1 V=s
+        echo "::set-output name=status::success"
+        grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/' > DEVICE_NAME
+        [ -s DEVICE_NAME ] && echo "DEVICE_NAME=_$(cat DEVICE_NAME)" >> $GITHUB_ENV
+        
+    - name: Check space usage | 查看磁盘使用情况
+      if: (!cancelled())
+      run: df -hT
+
+    - name: Upload bin directory to Actions | 上传bin压缩目录
+      uses: actions/upload-artifact@main
+      if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
       with:
-        name: x86-64-Config
-        path: ${{env.UPLOAD}}
+        name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_UPLOAD_TIME }}
+        path: openwrt/bin/packages/x86_64
+        retention-days: ${{ env.RECENT_LASTEST }}
+        if-no-files-found: ignore
+
+    - name: Organize files | 整理编译好的固件
+      id: organize
+      if: steps.compile.outputs.status == 'success' && !cancelled()
+      run: |
+        cd openwrt/bin/targets/*/*
+        rename -v "s/^openwrt/${{ env.PATCHVER }}-openwrt/" *
+        echo "FIRMWARE=$PWD" >> $GITHUB_ENV
+        cp $GITHUB_WORKSPACE/openwrt/.config x86-64.config
+        mv -f config.buildinfo x86-64-diff.config
+        rm -rf packages && mkdir packages
+        #find -name "*esxi.vmdk*" | xargs -i mv -f {} packages
+        #find -name "*esxi-flat.vmdk*" | xargs -i mv -f {} packages
+        find -name "*rootfs*" | xargs -i mv -f {} packages
+        find -name "*.buildinfo*" | xargs -i mv -f {} packages
+        find -name "*.manifest*" | xargs -i mv -f {} packages
+        find -name "*vmlinuz*" | xargs -i mv -f {} packages        
+        find -name "*sha256sums*" | xargs -i mv -f {} packages
+        rm -rf packages
+        echo "::set-output name=status::success"        
+   
+    - name: Upload firmware directory | 上传固件到github
+      uses: actions/upload-artifact@main
+      if: steps.organize.outputs.status == 'success' && env.UPLOAD_FIRMWARE == 'true' && !cancelled()      
+      with:
+        name: OpenWrt_${{ env.PATCHVER }}${{ env.DEVICE_NAME }}${{ env.FILE_UPLOAD_TIME }}
+        path: ${{ env.FIRMWARE }}
+        retention-days: ${{ env.RECENT_LASTEST }}
+        if-no-files-found: ignore
+       
+    - name: Delete workflow runs | 清理workflow
+      uses: GitRML/delete-workflow-runs@main
+      with:
+        retain_days: 7
+        keep_minimum_runs: 0
+        
+    - name: Remove old Releases | 清理Releases
+      uses: dev-drprasad/delete-older-releases@v0.1.0
+      if: env.UPLOAD_RELEASE == 'true' && !cancelled()
+      with:
+        keep_latest: 3
+        delete_tags: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.RELEASES_TOKEN }}
