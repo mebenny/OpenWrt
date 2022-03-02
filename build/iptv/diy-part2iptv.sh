@@ -10,25 +10,14 @@
 # Description: OpenWrt DIY script part 2 (After Update feeds)
 #
 
+echo "修改默认LAN口IP，及相应的局域网设置，详细见diy-part1.sh设置"
+sed -i "/exit 0/i\chmod +x /etc/webweb.sh && source /etc/webweb.sh" $ZZZ
+
 # Modify default IP
 sed -i 's/192.168.1.1/192.168.10.77/g' package/base-files/files/bin/config_generate
 # sed -i 's/+IPV6:libip6tc//g' package/network/config/firewall/Makefile
 # sed -i 's/+IPV6:kmod-nf-conntrack6//g' package/network/config/firewall/Makefile
 # sed -i 's/+IPV6:libip6tc//g' package/network/utils/iptables/Makefile
-
-# Modify default NAT
-export ZZ="package/lean/default-settings/files/zzz-default-settings"
-sed -i "13i uci set network.lan.ifname 'eth0'" $ZZ
-sed -i "14i uci set network.lan._orig_ifname 'eth0'" $ZZ
-sed -i "15i uci set network.lan._orig_bridge 'true'" $ZZ
-sed -i "16i uci set network.lan.proto 'static'" $ZZ
-sed -i "17i uci set network.lan.ipaddr '192.168.10.77'" $ZZ
-sed -i "18i uci set network.lan.netmask '255.255.255.0'" $ZZ
-sed -i "19i uci set network.lan.gateway '192.168.10.1" $ZZ
-sed -i "20i uci set network.lan.broadcast '192.168.10.255" $ZZ
-sed -i "21i uci set network.lan.dns '192.168.10.1" $ZZ
-sed -i "22i uci set network.lan.delegate '0'" $ZZ
-sed -i "23i uci commit network\n" $ZZ
 
 # 修改默认主题
 sed -i "s/luci-theme-bootstrap/luci-theme-mcat/g" feeds/luci/collections/luci/Makefile
@@ -79,3 +68,6 @@ rm -rf package/lean/luci-app-xlnetacc
 
 ./scripts/feeds update -a
 ./scripts/feeds install -a
+
+
+echo "diy-part2.sh已执行完毕！"
