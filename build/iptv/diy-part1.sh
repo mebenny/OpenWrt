@@ -30,7 +30,7 @@ echo 'src-git mebenny https://github.com/mebenny/openwrt-packages' >>feeds.conf.
 # 获取日志查看器
 git clone https://github.com/gdck/luci-app-tn-logview.git package/lean/luci-app-tn-logview
 # 添加luci-app-advanced
-# git clone https://github.com/sirpdboy/luci-app-advanced.git package/lean/luci-app-advanced
+git clone https://github.com/sirpdboy/luci-app-advanced.git package/lean/luci-app-advanced
 # autotimeset 定时设置插件
 git clone https://github.com/sirpdboy/luci-app-autotimeset.git package/lean/luci-app-autotimeset
 
