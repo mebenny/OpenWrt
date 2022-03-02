@@ -23,9 +23,9 @@ env:
   REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
   #FEEDS_CONF: feeds.conf.default
-  CONFIG_FILE: build/X86/x86-64.config
-  DIY_P1_SH: build/X86/diy-part1.sh
-  DIY_P2_SH: build/X86/diy-part2.sh
+  CONFIG_FILE: build/iptv/iptv.config
+  DIY_P1_SH: build/iptv/diy-part1.sh
+  DIY_P2_SH: build/iptv/diy-part2.sh
   SSH_ACTIONS: false
   UPLOAD_CONFIG: true
   UPLOAD_BIN_DIR: true
@@ -113,7 +113,7 @@ jobs:
       uses: actions/upload-artifact@main
       if: steps.makedeconfig.outputs.status == 'success' && env.UPLOAD_CONFIG == 'true' && !cancelled()      
       with:
-        name: x86-64.config
+        name: iptv.config
         path: .config
         retention-days: 7
         if-no-files-found: ignore
@@ -180,8 +180,8 @@ jobs:
         cd openwrt/bin/targets/*/*
         rename -v "s/^openwrt/${{ env.PATCHVER }}-openwrt/" *
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
-        cp $GITHUB_WORKSPACE/openwrt/.config x86-64.config
-        mv -f config.buildinfo x86-64-diff.config
+        cp $GITHUB_WORKSPACE/openwrt/.config iptv.config
+        mv -f config.buildinfo iptv-diff.config
         rm -rf packages && mkdir packages
         #find -name "*esxi.vmdk*" | xargs -i mv -f {} packages
         #find -name "*esxi-flat.vmdk*" | xargs -i mv -f {} packages
