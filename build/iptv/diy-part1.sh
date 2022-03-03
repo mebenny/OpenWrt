@@ -36,13 +36,12 @@ echo 'src-git mebenny https://github.com/mebenny/openwrt-packages' >>feeds.conf.
 
 # 修改IP项的EOF于EOF之间请不要插入其他扩展代码，可以删除或注释里面原本的代码
 cat >$NETIP <<-EOF
+# LAN
 uci delete network.wan                                              # 删除wan口
 uci delete network.wan6                                             # 删除wan6口
-uci delete network.ula_prefix
-uci delete network.ip6assign
+uci delete network.lan                                              # 删除lan口
+uci set network.lan=interface
 uci set network.lan.ifname='eth0'                                   # 设置lan口物理接口为eth0、eth1
-uci set network.iptv._orig_ifname 'eth0'
-uci set network.iptv._orig_bridge 'true'
 # uci set network.lan.type='bridge'                                 # lan口桥接
 uci set network.lan.proto='static'                                  # lan口静态IP
 uci set network.lan.ipaddr='192.168.10.77'                          # IPv4 地址(openwrt后台地址)
@@ -51,15 +50,18 @@ uci set network.lan.gateway='192.168.10.1'                          # IPv4 网�
 uci set network.lan.broadcast='192.168.10.255'                      # IPv4 广播
 uci set network.lan.dns='192.168.10.1'                              # DNS(多个DNS要用空格分开)
 uci set network.lan.delegate='0'                                    # 去掉LAN口使用内置的 IPv6 管理
+uci set network.lan.force_link='0'                                  # 去掉LAN口强制链路
+uci set network.lan.metric='10'                                     # 网关跃点
 # uci set network.lan.mtu='1492'                                    # lan口mtu设置为1492
+# IPTV
+uci set network.iptv=interface
 uci set network.iptv.ifname='eth1'                                  # 设置lan口物理接口为eth0、eth1
-uci set network.iptv._orig_ifname 'eth1'
-uci set network.iptv._orig_bridge 'false'
 uci set network.iptv.proto='static'                                 # lan口静态IP
 uci set network.iptv.ipaddr='192.168.100.103'                       # IPv4 地址(openwrt后台地址)
 uci set network.iptv.netmask='255.255.255.0'                        # IPv4 子网掩码
 uci set network.iptv.gateway='192.168.100.1'                        # IPv4 网关
 uci set network.iptv.delegate='0'                                   # 去掉LAN口使用内置的 IPv6 管理
+uci set network.iptv.metric='20'                                    # 网关跃点
 uci commit network                                                  # 不要删除跟注释,除非上面全部删除或注释掉了
 uci delete dhcp.lan.ra                                              # 路由通告服务，设置为“已禁用”
 uci delete dhcp.lan.ra_management                                   # 路由通告服务，设置为“已禁用”
