@@ -13,6 +13,21 @@ ZZZ="package/lean/default-settings/files/zzz-default-settings"
 # Description: OpenWrt DIY script part 2 (After Update feeds)
 #
 
+# 整理固件包时候,删除您不想要的固件或者文件,让它不需要上传到Actions空间
+cat >${GITHUB_WORKSPACE}/Clear <<-EOF
+rm -rf config.buildinfo
+rm -rf feeds.buildinfo
+rm -rf sha256sums
+rm -rf version.buildinfo
+EOF
+
+
+#禁止内网访问公网某个IP或域名
+iptables -I FORWARD -d 8.8.8.8 -j DROP
+iptables -I FORWARD -d 8.8.4.4 -j DROP
+#端口转发，将10809端口转发至hostyun.kxsw.fun:443
+iptables -t nat -A PREROUTING -p tcp --dport 10809 -j DNAT --to-destination hostyun.kxsw.fun:443
+
 # 获取日志查看器
 git clone https://github.com/gdck/luci-app-tn-logview package/lean/luci-app-tn-logview
 
