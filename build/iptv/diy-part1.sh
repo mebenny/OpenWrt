@@ -91,6 +91,7 @@ uci commit firewall
 # Dropbear
 #uci set dropbear.@dropbear[0].Port='8822'                                # SSH端口设置为'8822'
 #uci commit dropbear
+
 # uci set system.@system[0].hostname='OpenWrtX'                     # 修改主机名称为OpenWrtX
 # sed -i 's/\/bin\/login/\/bin\/login -f root/' /etc/config/ttyd    # 设置ttyd免帐号登录，如若开启，进入OPENWRT后可能要重启一次才生效
 EOF
