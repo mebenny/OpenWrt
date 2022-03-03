@@ -7,6 +7,119 @@
 # Author: P3TERX
 # Blog: https://p3terx.com
 #============================================================
+
+REPO_URL="https://github.com/coolsnowwolf/lede"     # 编译固件源码链接（请勿修改）
+REPO_BRANCH="master"                                # 源码链接的分支（请勿修改）
+CONFIG_FILE=".config"            # 配置文件（可SSH远程定制固件插件，也可在本地提取配置粘贴到此文件）
+DIY_PART_SH="diy-part.sh"        # 自定义文件(增加插件或者修改IP之类的自定义设置)
+SSH_ACTIONS="false"              # SSH远程配置固件（true=开启）（false=关闭）
+UPLOAD_BIN_DIR="false"           # 上传【bin文件夹】到github空间（true=开启）（false=关闭）
+UPLOAD_CONFIG="true"             # 上传【.config】配置文件到github空间（true=开启）（false=关闭）
+UPLOAD_FIRMWARE="true"           # 上传固件到github空间（true=开启）（false=关闭）
+UPLOAD_COWTRANSFER="false"       # 上传固件到到【奶牛快传】和【WETRANSFER】（true=开启）（false=关闭）
+UPLOAD_RELEASE="true"           # 发布固件（true=开启）（false=关闭）
+SERVERCHAN_SCKEY="TELE"          # Telegram或push通知,填"TELE"为Telegram通知，填"PUSH"为pushplus通知，（false=关闭）
+USE_CACHEWRTBUILD="true"         # 是否开启缓存加速,如出现带有缓存编译时莫名错误导致失败的,请关闭（true=开启）（false=关闭）
+REGULAR_UPDATE="true"            # 把自动在线更新的插件编译进固件（请看说明）（true=开启）（false=关闭）
+AUTO_UPDATE="true"                     # 把编译的自动更新固件上传至Github AutoUpdate（true=开启）（false=关闭）
+BY_INFORMATION="true"            # 是否显示编译信息,如出现信息显示错误导致信息不显示,请关闭（true=开启）（false=关闭）
+
+echo '修改 IP设置'
+cat >$NETIP <<-EOF
+uci delete network.wan                                                               # 删除wan口
+uci delete network.wan6                                                             # 删除wan6口
+uci set network.lan.type='bridge'                                               # lan口桥接
+uci set network.lan.proto='static'                                               # lan口静态IP
+uci set network.lan.ipaddr='192.168.1.2'                                    # IPv4 地址(openwrt后台地址)
+uci set network.lan.netmask='255.255.255.0'                             # IPv4 子网掩码
+uci set network.lan.gateway='192.168.1.1'                                 # IPv4 网关
+#uci set network.lan.broadcast='192.168.1.255'                           # IPv4 广播
+uci set network.lan.dns='192.168.1.2'                                         # DNS(多个DNS要用空格分开)
+uci set network.lan.delegate='0'                                                 # 去掉LAN口使用内置的 IPv6 管理
+uci set network.lan.ifname='eth0'                                               # 设置lan口物理接口为eth0
+#uci set network.lan.ifname='eth0 eth1'                                     # 设置lan口物理接口为eth0、eth1
+uci set network.lan.mtu='1492'                                                   # lan口mtu设置为1492
+uci delete network.lan.ip6assign                                                 #接口→LAN→IPv6 分配长度——关闭，恢复uci set network.lan.ip6assign='64'
+uci commit network
+uci delete dhcp.lan.ra                                                                  # 路由通告服务，设置为“已禁用”
+uci delete dhcp.lan.ra_management                                           # 路由通告服务，设置为“已禁用”
+uci delete dhcp.lan.dhcpv6                                                         # DHCPv6 服务，设置为“已禁用”
+uci set dhcp.lan.ignore='1'                                                          # 关闭DHCP功能
+uci set dhcp.@dnsmasq[0].filter_aaaa='1'                                   # DHCP/DNS→高级设置→解析 IPv6 DNS 记录——禁止
+uci set dhcp.@dnsmasq[0].cachesize='0'                                    # DHCP/DNS→高级设置→DNS 查询缓存的大小——设置为'0'
+uci add dhcp domain
+uci set dhcp.@domain[0].name='openwrtx'                                 # 网络→主机名→主机目录——“openwrtx”
+uci set dhcp.@domain[0].ip='192.168.1.2'                                  # 对应IP解析——192.168.1.2
+uci add dhcp domain
+uci set dhcp.@domain[1].name='cdn.jsdelivr.net'                       # 网络→主机名→主机目录——“cdn.jsdelivr.net”
+uci set dhcp.@domain[1].ip='104.16.86.20'                                 # 对应IP解析——'104.16.86.20'
+uci commit dhcp
+uci delete firewall.@defaults[0].syn_flood                                 # 防火墙→SYN-flood 防御——关闭；默认开启
+uci set firewall.@defaults[0].fullcone='1'                                     # 防火墙→FullCone-NAT——启用；默认关闭
+uci commit firewall
+uci set dropbear.@dropbear[0].Port='8822'                                # SSH端口设置为'8822'
+uci commit dropbear
+uci set system.@system[0].hostname='OpenWrtX'                     # 修改主机名称为OpenWrtX
+sed -i 's/\/bin\/login/\/bin\/login -f root/' /etc/config/ttyd       # 设置ttyd免帐号登录，如若开启，进入OPENWRT后可能要重启一次才生效
+EOF
+
+echo '选择argon为默认主题'
+sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' feeds/luci/collections/luci/Makefile
+
+echo '增加个性名字 ${Author} 默认为你的github帐号'
+sed -i "s/OpenWrt /Ss. compiled in $(TZ=UTC-8 date "+%Y.%m.%d") @ OpenWrt /g" $ZZZ
+
+echo '恢复OPKG软件源为snapshot'
+sed -i '/openwrt_luci/d' $ZZZ
+
+# x86机型,默认内核5.10，修改内核为5.15
+#sed -i 's/PATCHVER:=5.10/PATCHVER:=5.15/g' target/linux/x86/Makefile
+
+echo '设置密码为空'
+sed -i '/CYXluq4wUazHjmCDBCqXF/d' $ZZZ
+
+#############################################pushd#############################################
+pushd feeds/luci
+cd applications
+
+echo "添加插件 luci-app-advanced"
+rm -rf ./luci-app-advanced
+git clone https://github.com/sirpdboy/luci-app-advanced
+
+cd ../themes
+
+echo "添加主题 new theme neobird"
+rm -rf ./luci-theme-neobird
+git clone https://github.com/thinktip/luci-theme-neobird.git
+
+#echo "添加插件 luci-app-passwall"
+#git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall
+
+#echo "添加插件 luci-app-ssr-plus"
+#git clone --depth=1 https://github.com/fw876/helloworld luci-app-ssr-plus
+
+popd
+#############################################popd#############################################
+
+echo "修改插件名字"
+sed -i 's/"Argon 主题设置"/"Argon设置"/g' `grep "Argon 主题设置" -rl ./`
+sed -i 's/"Turbo ACC 网络加速"/"Turbo ACC"/g' `grep "Turbo ACC 网络加速" -rl ./`
+
+# 在线更新删除不想保留固件的某个文件，在EOF跟EOF直接加入删除代码，比如： rm /etc/config/luci，rm /etc/opkg/distfeeds.conf
+#cat >$DELETE <<-EOF
+#EOF
+
+# 整理固件包时候,删除您不想要的固件或者文件,让它不需要上传到Actions空间
+cat >${GITHUB_WORKSPACE}/Clear <<-EOF
+rm -rf config.buildinfo
+rm -rf feeds.buildinfo
+rm -rf openwrt-x86-64-generic-kernel.bin
+rm -rf openwrt-x86-64-generic.manifest
+rm -rf sha256sums
+rm -rf version.buildinfo
+EOF
+
+
 ZZZ="package/lean/default-settings/files/zzz-default-settings"
 # https://github.com/P3TERX/Actions-OpenWrt
 # File name: diy-part2.sh
