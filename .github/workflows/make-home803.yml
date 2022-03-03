@@ -23,9 +23,9 @@ env:
   REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
   FEEDS_CONF: feeds.conf.default
-  CONFIG_FILE: build/iptv/iptv.config
-  DIY_P1_SH: build/iptv/diy-part1.sh
-  DIY_P2_SH: build/iptv/diy-part2.sh
+  CONFIG_FILE: build/home803/home803.config
+  DIY_P1_SH: build/home803/diy-part1.sh
+  DIY_P2_SH: build/home803/diy-part2.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_COWTRANSFER: false
