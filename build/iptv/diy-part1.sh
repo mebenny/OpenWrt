@@ -59,8 +59,8 @@ uci delete network.lan.ip6assign                                    #接口→LA
 uci delete network.lan.ula_prefix
 # IPTV
 uci set network.iptv=interface                                      # IPTV接口
-# uci set network.iptv.ifname='eth1'                                  # 设置IPTV口物理接口为eth0、eth1
-uci set network.iptv.ifname='iptv'                                  # 设置IPTV口物理接口为iptv
+uci set network.iptv.ifname='eth1'                                  # 设置IPTV口物理接口为eth0、eth1
+# uci set network.iptv.ifname='iptv'                                  # 设置IPTV口物理接口为iptv
 uci set network.iptv.proto='static'                                 # IPTV口静态IP
 uci set network.iptv.ipaddr='192.168.100.103'                       # IPv4 地址(openwrt后台地址)
 uci set network.iptv.netmask='255.255.255.0'                        # IPv4 子网掩码
