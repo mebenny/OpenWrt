@@ -42,8 +42,8 @@ uci delete network.wan6                                             # 删除wan6
 uci delete network.lan                                              # 删除lan口
 
 uci set network.lan=interface                                       # lan接口 
-# uci set network.lan.ifname='eth0'                                   # 设置lan口物理接口为eth0、eth1
-uci set network.lan.ifname='lan'                                    # 设置lan口物理接口为lan
+uci set network.lan.ifname='eth0'                                   # 设置lan口物理接口为eth0、eth1
+# uci set network.lan.ifname='lan'                                    # 设置lan口物理接口为lan
 # uci set network.lan.type='bridge'                                 # lan口桥接
 uci set network.lan.proto='static'                                  # lan口静态IP
 uci set network.lan.ipaddr='192.168.10.77'                          # IPv4 地址(openwrt后台地址)
