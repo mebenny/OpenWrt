@@ -56,7 +56,7 @@ uci set network.lan.force_link='0'                                  # 去掉LAN�
 uci set network.lan.metric='10'                                     # 网关跃点
 # uci set network.lan.mtu='1492'                                    # lan口mtu设置为1492
 uci delete network.lan.ip6assign                                    #接口→LAN→IPv6 分配长度——关闭，恢复uci set network.lan.ip6assign='64'
-uci delete network.lan.ula_prefix
+uci delete network.globals.ula_prefix
 # IPTV
 uci set network.iptv=interface                                      # IPTV接口
 uci set network.iptv.ifname='eth1'                                  # 设置IPTV口物理接口为eth0、eth1
