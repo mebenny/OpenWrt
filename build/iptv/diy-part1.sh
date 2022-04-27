@@ -34,6 +34,9 @@ echo 'src-git mebenny https://github.com/mebenny/openwrt-packages' >>feeds.conf.
 # autotimeset 定时设置插件
 # git clone https://github.com/sirpdboy/luci-app-autotimeset.git package/lean/luci-app-autotimeset
 
+echo "--------------diy-part start--------------"
+echo
+echo '修改 IP设置'
 # 修改IP项的EOF于EOF之间请不要插入其他扩展代码，可以删除或注释里面原本的代码
 cat >$NETIP <<-EOF
 # LAN
@@ -43,7 +46,7 @@ uci delete network.lan                                              # 删除lan�
 
 uci set network.lan=interface                                       # lan接口 
 uci set network.lan.ifname='eth0'                                   # 设置lan口物理接口为eth0、eth1
-# uci set network.lan.ifname='lan'                                    # 设置lan口物理接口为lan
+# uci set network.lan.ifname='lan'                                  # 设置lan口物理接口为lan
 # uci set network.lan.type='bridge'                                 # lan口桥接
 uci set network.lan.proto='static'                                  # lan口静态IP
 uci set network.lan.ipaddr='192.168.10.77'                          # IPv4 地址(openwrt后台地址)
@@ -90,7 +93,10 @@ uci commit firewall
 # uci set dropbear.@dropbear[0].Port='8822'                         # SSH端口设置为'8822'
 # uci commit dropbear
 # uci set system.@system[0].hostname='OpenWrtX'                     # 修改主机名称为OpenWrtX
+# uci set luci.main.mediaurlbase='/luci-static/mcat'                  # 设置mcat为默认主题
+# uci commit luci
 # sed -i 's/\/bin\/login/\/bin\/login -f root/' /etc/config/ttyd    # 设置ttyd免帐号登录，如若开启，进入OPENWRT后可能要重启一次才生效
+# uci commit ttyd
 EOF
 
 cat >$WEBWEB <<-EOF
@@ -102,6 +108,37 @@ uci commit argon
 rm -rf /etc/networkip
 rm -rf /etc/webweb.sh
 exit 0
+EOF
+
+#############################################pushd#############################################
+#pushd feeds/luci
+
+#cd applications
+#echo "添加插件 luci-app-passwall"
+#git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall
+
+#echo "添加插件 luci-app-ssr-plus"
+#git clone --depth=1 https://github.com/fw876/helloworld luci-app-ssr-plus
+#cd ../themes
+
+#cd themes
+
+#echo "添加主题 new theme neobird"
+#rm -rf ./luci-theme-neobird
+#git clone https://github.com/thinktip/luci-theme-neobird.git
+
+#popd
+#############################################popd#############################################
+
+# 整理固件包时候,删除您不想要的固件或者文件,让它不需要上传到Actions空间
+cat >${GITHUB_WORKSPACE}/Clear <<-EOF
+rm -rf config.buildinfo
+rm -rf feeds.buildinfo
+rm -rf openwrt-x86-64-generic-kernel.bin
+rm -rf openwrt-x86-64-generic.manifest
+# rm -rf openwrt-x86-64-generic-squashfs-rootfs.img.gz
+rm -rf sha256sums
+rm -rf version.buildinfo
 EOF
 
 echo "diy-part1.sh已执行完毕！"
