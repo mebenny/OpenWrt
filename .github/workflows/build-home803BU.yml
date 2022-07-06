@@ -8,7 +8,7 @@
 # Description: Build OpenWrt using GitHub Actions
 #
 
-name: Build Home803
+name: Build Home803BU
 
 on:
   repository_dispatch:
