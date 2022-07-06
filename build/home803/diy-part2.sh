@@ -56,7 +56,7 @@ sed -i "49i echo 'ip6tables -A FORWARD -i $LAN -j ACCEPT' >> /etc/firewall.user"
 # sed -i '4i /etc/init.d/samba disable' package/base-files/files/etc/rc.local #禁止samba服务开机自动
 
 # Remove some default packages
-sed -i 's/luci-app-accesscontrol//g;s/luci-app-adbyby-plus//g;s/luci-app-ddns//g;s/luci-app-ipsec-vpnd//g;s/luci-app-nlbwmon//g;s/luci-app-ssr-plus//g;s/luci-app-ttyd//g;s/luci-app-unblockmusic//g;s/luci-app-vlmcsd//g;s/luci-app-vsftpd//g;s/luci-app-ttyd//g;s/luci-app-wireguard//g;s/luci-app-xlnetacc//g;s/luci-app-zerotier//g' include/target.mk
+sed -i 's/luci-app-accesscontrol//g;s/luci-app-adbyby-plus//g;s/luci-app-ddns//g;s/luci-app-ipsec-vpnd//g;s/luci-app-nlbwmon//g;s/luci-app-ssr-plus//g;s/luci-app-ttyd//g;s/luci-app-unblockmusic//g;s/luci-app-vlmcsd//g;s/luci-app-vsftpd//g;s/luci-app-wireguard//g;s/luci-app-wol//g;s/luci-app-xlnetacc//g;s/luci-app-zerotier//g' include/target.mk
 
 #移除不用软件包
 rm -rf package/lean/luci-app-accesscontrol
@@ -70,6 +70,7 @@ rm -rf package/lean/luci-app-unblockmusic
 rm -rf package/lean/luci-app-vlmcsd
 rm -rf package/lean/luci-app-vsftpd
 rm -rf package/lean/luci-app-wireguard
+rm -rf package/lean/luci-app-wol
 rm -rf package/lean/luci-app-xlnetacc
 rm -rf package/lean/luci-app-zerotier
 
