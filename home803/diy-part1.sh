@@ -34,5 +34,5 @@ echo 'src-git kiddin9 https://github.com/kiddin9/openwrt-packages' >>feeds.conf.
 # 添加luci-app-advanced
 # git clone https://github.com/sirpdboy/luci-app-advanced package/lean/luci-app-advanced
 # autotimeset 定时设置插件
-git clone https://github.com/sirpdboy/luci-app-autotimeset.git package/lean/luci-app-autotimeset
-git clone https://github.com/kenzok8/openwrt-packages/tree/master/luci-theme-mcat.git package/lean/luci-app-autotimeset
+# git clone https://github.com/sirpdboy/luci-app-autotimeset.git package/lean/luci-app-autotimeset
+src-git mebenny https://github.com/mebenny/openwrt-packages
