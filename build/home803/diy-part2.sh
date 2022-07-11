@@ -17,7 +17,7 @@ sed -i 's/192.168.1.1/192.168.111.1/g' package/base-files/files/bin/config_gener
 # sed -i 's/+IPV6:libip6tc//g' package/network/utils/iptables/Makefile
 
 # 修改默认主题
-sed -i "s/luci-theme-bootstrap/luci-theme-mcat/g" feeds/luci/collections/luci/Makefile
+sed -i "s/luci-theme-bootstrap/luci-theme-argon/g" feeds/luci/collections/luci/Makefile
 
 # 修改机器名称
 sed -i "s/OpenWrt/Home803/g" package/base-files/files/bin/config_generate
