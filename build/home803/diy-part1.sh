@@ -29,6 +29,7 @@ echo 'src-git small https://github.com/kenzok8/small' >>feeds.conf.default
 # 添加luci-app-advanced
 # git clone https://github.com/sirpdboy/luci-app-advanced package/lean/luci-app-advanced
 
+#sirpdboy
 # autotimeset 定时设置插件
-git clone https://github.com/sirpdboy/luci-app-autotimeset.git package/lean/luci-app-autotimeset
-#git clone https://github.com/sirpdboy/luci-app-wizard.git package/lean/luci-app-wizard
+git clone https://github.com/sirpdboy/luci-app-autotimeset package/lean/luci-app-autotimeset
+
