@@ -15,10 +15,11 @@
 
 # Add a feed source
 # echo 'src-git helloworld https://github.com/fw876/helloworld' >>feeds.conf.default
-
-echo 'src-git passwall https://github.com/xiaorouji/openwrt-passwall' >>feeds.conf.default
-echo 'src-git kiddin9 https://github.com/kiddin9/openwrt-packages' >>feeds.conf.default
-echo 'src-git mebenny https://github.com/mebenny/openwrt-packages' >>feeds.conf.default
+echo 'src-git kenzo https://github.com/kenzok8/openwrt-packages' >>feeds.conf.default
+echo 'src-git small https://github.com/kenzok8/small' >>feeds.conf.default
+# echo 'src-git passwall https://github.com/xiaorouji/openwrt-passwall' >>feeds.conf.default
+# echo 'src-git kiddin9 https://github.com/kiddin9/openwrt-packages' >>feeds.conf.default
+# echo 'src-git mebenny https://github.com/mebenny/openwrt-packages' >>feeds.conf.default
 # echo 'src-git opentopd  https://github.com/sirpdboy/sirpdboy-package' >>feeds.conf.default
 
 # echo 'src-git kenzo https://github.com/kenzok8/openwrt-packages' >>feeds.conf.default
@@ -34,5 +35,5 @@ echo 'src-git mebenny https://github.com/mebenny/openwrt-packages' >>feeds.conf.
 # 添加luci-app-advanced
 # git clone https://github.com/sirpdboy/luci-app-advanced package/lean/luci-app-advanced
 # autotimeset 定时设置插件
-# git clone https://github.com/sirpdboy/luci-app-autotimeset.git package/lean/luci-app-autotimeset
+git clone https://github.com/sirpdboy/luci-app-autotimeset package/lean/luci-app-autotimeset
 
