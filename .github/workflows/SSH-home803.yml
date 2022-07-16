@@ -15,7 +15,7 @@ on:
       ssh:
         description: 'SSH connection to Actions'
         required: false
-        default: 'tere'
+        default: 'false'
   #schedule:
     #- cron: 0 1 * * 4
 
