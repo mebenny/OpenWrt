@@ -17,7 +17,7 @@ sed -i 's/192.168.1.1/192.168.111.1/g' package/base-files/files/bin/config_gener
 # sed -i 's/+IPV6:libip6tc//g' package/network/utils/iptables/Makefile
 
 # 修改默认主题
-sed -i "s/luci-theme-bootstrap/luci-theme-mcat/g" feeds/luci/collections/luci/Makefile
+sed -i "s/luci-theme-bootstrap/luci-theme-argon/g" feeds/luci/collections/luci/Makefile
 
 # 修改机器名称
 sed -i "s/OpenWrt/Home803/g" package/base-files/files/bin/config_generate
@@ -56,14 +56,14 @@ sed -i "49i echo 'ip6tables -A FORWARD -i $LAN -j ACCEPT' >> /etc/firewall.user"
 # sed -i '4i /etc/init.d/samba disable' package/base-files/files/etc/rc.local #禁止samba服务开机自动
 
 # Remove some default packages
-sed -i 's/luci-app-accesscontrol//g;s/luci-app-adbyby-plus//g;s/luci-app-ddns//g;s/luci-app-ipsec-vpnd//g;s/luci-app-nlbwmon//g;s/luci-app-ssr-plus//g;s/luci-app-ttyd//g;s/luci-app-unblockmusic//g;s/luci-app-vlmcsd//g;s/luci-app-vsftpd//g;s/luci-app-wireguard//g;s/luci-app-xlnetacc//g;s/luci-app-zerotier//g' include/target.mk
+sed -i 's/luci-app-accesscontrol//g;s/luci-app-adbyby-plus//g;s/luci-app-ddns//g;s/luci-app-ipsec-vpnd//g;s/luci-app-ssr-plus//g;s/luci-app-ttyd//g;s/luci-app-unblockmusic//g;s/luci-app-vlmcsd//g;s/luci-app-vsftpd//g;s/luci-app-wireguard//g;s/luci-app-xlnetacc//g;s/luci-app-zerotier//g' include/target.mk
 
 #移除不用软件包
 rm -rf package/lean/luci-app-accesscontrol
 rm -rf package/lean/luci-app-adbyby-plus
 rm -rf package/lean/luci-app-ddns
 rm -rf package/lean/luci-app-ipsec-vpnd
-rm -rf package/lean/luci-app-nlbwmon
+# rm -rf package/lean/luci-app-nlbwmon
 rm -rf package/lean/luci-app-ssr-plus
 rm -rf package/lean/luci-app-ttyd
 rm -rf package/lean/luci-app-unblockmusic
