@@ -26,7 +26,7 @@ env:
   CONFIG_FILE:  build/home803/home803.config
   DIY_P1_SH:  build/home803/diy-part1.sh
   DIY_P2_SH:  build/home803/diy-part2.sh
-  SSH_ACTIONS: false
+  SSH_ACTIONS: true
   UPLOAD_CONFIG: true
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
