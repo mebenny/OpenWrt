@@ -111,7 +111,7 @@ jobs:
       uses: actions/upload-artifact@main
       if: steps.makedeconfig.outputs.status == 'success' && env.UPLOAD_CONFIG == 'true' && !cancelled()      
       with:
-        name: home803.config
+        name: home803P.config
         path: .config
         retention-days: 7
         if-no-files-found: ignore
