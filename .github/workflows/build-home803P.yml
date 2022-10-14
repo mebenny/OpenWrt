@@ -22,12 +22,10 @@ on:
 env:
   REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
-  #FEEDS_CONF: feeds.conf.default
+  FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: build/home803P/home803P.config
   DIY_P1_SH: build/home803P/diy-part1.sh
   DIY_P2_SH: build/home803P/diy-part2.sh
-  SSH_ACTIONS: false
-  UPLOAD_CONFIG: true
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_COWTRANSFER: false
@@ -38,32 +36,23 @@ env:
 jobs:
   build:
     runs-on: ubuntu-20.04
-    if: github.event.repository.owner.id == github.event.sender.id
 
     steps:
     - name: Checkout | 检查项目分支
-      uses: actions/checkout@v2
+      uses: actions/checkout@main
 
     - name: Initialization environment | 安装编译环境
       env:
         DEBIAN_FRONTEND: noninteractive
       run: |
-        sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /usr/lib/jvm /opt/ghc
+        sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
         sudo -E apt-get -qq update
-        sudo -E apt-get -qq install -y build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch python3 python2.7 unzip zlib1g-dev lib32gcc1 libc6-dev-i386 lib32stdc++6 subversion flex uglifyjs git-core gcc-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler g++-multilib antlr3 gperf wget curl rename libpcap0.8-dev swig rsync
+        sudo -E apt-get -qq install $(curl -fsSL git.io/depends-ubuntu-2004)
         sudo -E apt-get -qq autoremove --purge
         sudo -E apt-get -qq clean
         sudo timedatectl set-timezone "$TZ"
         sudo mkdir -p /workdir
         sudo chown $USER:$GROUPS /workdir
-        
-        echo "FILE_CHN_TIME=$(date "+%Y年%m月%d日-%H点")" >> $GITHUB_ENV
-        echo "FILE_RELEASE_TIME=$(date "+%Y-%m-%d %H:%M")"  >> $GITHUB_ENV
-        echo "FILE_UPLOAD_TIME=$(date "+%Y%m%d-%H%M")"  >> $GITHUB_ENV
-        echo "tag_name=$(date "+%Y%m%d%H%M")"  >> $GITHUB_ENV
-        #echo "NETIP=package/base-files/files/etc/networkip" >> $GITHUB_ENV
-        #echo "WEBWEB=package/base-files/files/etc/webweb.sh" >> $GITHUB_ENV
-        #echo "ZZZ=package/lean/default-settings/files/zzz-default-settings" >> $GITHUB_ENV
         
     - name: Clone source code | 下载固件源码
       working-directory: /workdir
@@ -72,9 +61,9 @@ jobs:
         git clone $REPO_URL -b $REPO_BRANCH openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
            
-    - name: Load custom configuration 1 | 加载自定义设置 1
+    - name: Load custom feeds 1 | 加载自定义设置 1
       run: |
-        #[ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
+        [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
         chmod +x $DIY_P1_SH
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_P1_SH
@@ -93,57 +82,18 @@ jobs:
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_P2_SH
         
-    - name: SSH connection to Actions | SSH链接管理
-      uses: P3TERX/ssh2actions@v1.0.0
-      if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
-      env:
-        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+#    - name: SSH connection to Actions | SSH链接管理
+#      uses: P3TERX/ssh2actions@v1.0.0
+#      if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
+#      env:
+#        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+#        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
 
-    - name: Make deconfig | 生成配置文件
-      id: makedeconfig
-      run: |
-        cd openwrt
-        make defconfig
-        echo "TARGET_BOARD=$(awk -F '[="]+' '/TARGET_BOARD/{print $2}' .config)" >> $GITHUB_ENV
-
-    - name: Upload .config | 上传.config到github
-      uses: actions/upload-artifact@main
-      if: steps.makedeconfig.outputs.status == 'success' && env.UPLOAD_CONFIG == 'true' && !cancelled()      
-      with:
-        name: home803P.config
-        path: .config
-        retention-days: 7
-        if-no-files-found: ignore
-        
-    - name: Get patchver | 查询CPU型号、内核版本
-      continue-on-error: true
-      run: |
-        cd openwrt
-        if [[ `grep -c "KERNEL_PATCHVER:=" $GITHUB_WORKSPACE/openwrt/target/linux/${TARGET_BOARD}/Makefile` -eq '1' ]]; then
-          PATCHVE="$(egrep -o 'KERNEL_PATCHVER:=[0-9]+\.[0-9]+' $GITHUB_WORKSPACE/openwrt/target/linux/${TARGET_BOARD}/Makefile |cut -d "=" -f2)"
-          echo "PATCHVE=${PATCHVE}" >> $GITHUB_ENV
-        elif [[ `grep -c "KERNEL_PATCHVER=" $GITHUB_WORKSPACE/openwrt/target/linux/${TARGET_BOARD}/Makefile` -eq '1' ]]; then
-          PATCHVE="$(egrep -o 'KERNEL_PATCHVER=[0-9]+\.[0-9]+' $GITHUB_WORKSPACE/openwrt/target/linux/${TARGET_BOARD}/Makefile |cut -d "=" -f2)"
-          echo "PATCHVE=${PATCHVE}" >> $GITHUB_ENV
-        else
-          echo "PATCHVER=unknown" >> $GITHUB_ENV
-        fi
-        if [[ -n ${PATCHVE} ]] && [[ -f $GITHUB_WORKSPACE/openwrt/include/kernel-${PATCHVE} ]]; then
-          PATCHVER=$(egrep -o "${PATCHVE}.[0-9]+" $GITHUB_WORKSPACE/openwrt/include/kernel-${PATCHVE})
-          echo "PATCHVER=${PATCHVER}" >> $GITHUB_ENV
-        elif [[ -n ${PATCHVE} ]] && [[ ! -f $GITHUB_WORKSPACE/openwrt/include/kernel-${PATCHVE} ]]; then
-          PATCHVER=$(egrep -o "${PATCHVE}.[0-9]+" $GITHUB_WORKSPACE/openwrt/include/kernel-version.mk)
-          echo "PATCHVER=${PATCHVER}" >> $GITHUB_ENV
-        fi
-        echo "内核版本：${PATCHVER}"
-        cpuinfo=`cat /proc/cpuinfo | grep name | cut -f2 -d: | uniq -c | sed 's/      //'`
-        echo "CPU型号：${cpuinfo}"
-        
     - name: Download package | 下载安装包
       id: package
       run: |
         cd openwrt
+        make defconfig
         make download -j8
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
@@ -157,7 +107,7 @@ jobs:
         echo "::set-output name=status::success"
         grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/' > DEVICE_NAME
         [ -s DEVICE_NAME ] && echo "DEVICE_NAME=_$(cat DEVICE_NAME)" >> $GITHUB_ENV
-        
+        echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
     - name: Check space usage | 查看磁盘使用情况
       if: (!cancelled())
       run: df -hT
@@ -166,39 +116,23 @@ jobs:
       uses: actions/upload-artifact@main
       if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
       with:
-        name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_UPLOAD_TIME }}
-        path: openwrt/bin/packages/x86_64
-        retention-days: ${{ env.RECENT_LASTEST }}
-        if-no-files-found: ignore
+        name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
+        path: openwrt/bin
 
     - name: Organize files | 整理编译好的固件
       id: organize
-      if: steps.compile.outputs.status == 'success' && !cancelled()
+      if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
       run: |
         cd openwrt/bin/targets/*/*
-        rename -v "s/^openwrt/${{ env.PATCHVER }}-openwrt/" *
-        echo "FIRMWARE=$PWD" >> $GITHUB_ENV
-        cp $GITHUB_WORKSPACE/openwrt/.config home803.config
-        mv -f config.buildinfo home803-diff.config
-        rm -rf packages && mkdir packages
-        #find -name "*esxi.vmdk*" | xargs -i mv -f {} packages
-        #find -name "*esxi-flat.vmdk*" | xargs -i mv -f {} packages
-        find -name "*rootfs*" | xargs -i mv -f {} packages
-        find -name "*.buildinfo*" | xargs -i mv -f {} packages
-        find -name "*.manifest*" | xargs -i mv -f {} packages
-        find -name "*vmlinuz*" | xargs -i mv -f {} packages        
-        find -name "*sha256sums*" | xargs -i mv -f {} packages
         rm -rf packages
-        echo "::set-output name=status::success"        
-   
+        echo "FIRMWARE=$PWD" >> $GITHUB_ENV
+        echo "::set-output name=status::success"
     - name: Upload firmware directory | 上传固件到github
       uses: actions/upload-artifact@main
-      if: steps.organize.outputs.status == 'success' && env.UPLOAD_FIRMWARE == 'true' && !cancelled()      
+      if: steps.organize.outputs.status == 'success' && !cancelled()
       with:
-        name: OpenWrt_${{ env.PATCHVER }}${{ env.DEVICE_NAME }}${{ env.FILE_UPLOAD_TIME }}
+        name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
         path: ${{ env.FIRMWARE }}
-        retention-days: ${{ env.RECENT_LASTEST }}
-        if-no-files-found: ignore
        
     - name: Delete workflow runs | 清理workflow
       uses: GitRML/delete-workflow-runs@main
